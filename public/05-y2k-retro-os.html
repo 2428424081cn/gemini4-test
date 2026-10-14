@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05 // CYBERWARE 98 — 千禧年复古桌面操作系统</title>
+  <style>
+    :root {
+      --win-gray: #C0C0C0;
+      --win-light: #FFFFFF;
+      --win-dark: #808080;
+      --win-black: #000000;
+      --win-blue: #000080;
+      --win-cyan: #1084D0;
+      --desktop-bg: #008080;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--desktop-bg);
+      font-family: 'Tahoma', 'MS Sans Serif', 'SimSun', sans-serif;
+      font-size: 12px;
+      color: #000;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Desktop Icons */
+    .desktop-icons {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      z-index: 1;
+    }
+
+    .desk-icon {
+      width: 78px;
+      text-align: center;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .desk-icon-box {
+      width: 40px;
+      height: 40px;
+      background: var(--win-gray);
+      border-top: 2px solid var(--win-light);
+      border-left: 2px solid var(--win-light);
+      border-right: 2px solid var(--win-black);
+      border-bottom: 2px solid var(--win-black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .desk-icon span {
+      padding: 2px 4px;
+      line-height: 1.3;
+      text-shadow: 1px 1px 0 #000;
+    }
+
+    .desk-icon:hover span {
+      background: var(--win-blue);
+      outline: 1px dotted #FFFF00;
+    }
+
+    /* Classic 3D Bevel Window */
+    .win98-window {
+      position: absolute;
+      background: var(--win-gray);
+      border-top: 2px solid var(--win-light);
+      border-left: 2px solid var(--win-light);
+      border-right: 2px solid var(--win-black);
+      border-bottom: 2px solid var(--win-black);
+      box-shadow: inset -1px -1px 0 var(--win-dark), inset 1px 1px 0 #DFDFDF, 4px 4px 0 rgba(0,0,0,0.35);
+      padding: 3px;
+      z-index: 10;
+    }
+
+    .win-titlebar {
+      background: linear-gradient(90deg, var(--win-blue), var(--win-cyan));
+      color: #fff;
+      font-weight: bold;
+      padding: 4px 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+    }
+
+    .win-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .win-btn {
+      background: var(--win-gray);
+      border-top: 2px solid var(--win-light);
+      border-left: 2px solid var(--win-light);
+      border-right: 2px solid var(--win-black);
+      border-bottom: 2px solid var(--win-black);
+      color: #000;
+      font-family: inherit;
+      font-size: 12px;
+      padding: 4px 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .win-btn:active {
+      border-top: 2px solid var(--win-black);
+      border-left: 2px solid var(--win-black);
+      border-right: 2px solid var(--win-light);
+      border-bottom: 2px solid var(--win-light);
+      transform: translate(1px, 1px);
+    }
+
+    .win-close-btn {
+      width: 18px;
+      height: 16px;
+      padding: 0;
+      font-weight: bold;
+      font-size: 10px;
+    }
+
+    .win-body {
+      padding: 10px;
+    }
+
+    .sunken-box {
+      background: #fff;
+      border-top: 2px solid var(--win-dark);
+      border-left: 2px solid var(--win-dark);
+      border-right: 2px solid var(--win-light);
+      border-bottom: 2px solid var(--win-light);
+    }
+
+    /* Paint Canvas Tools */
+    .paint-toolbar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 20px;
+      height: 20px;
+      border: 2px inset #808080;
+      cursor: pointer;
+    }
+
+    .swatch.active {
+      outline: 2px solid #000;
+    }
+
+    /* Taskbar */
+    .taskbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--win-gray);
+      border-top: 2px solid var(--win-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 6px;
+      z-index: 999;
+    }
+
+    .taskbar-left {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .start-btn {
+      font-weight: bold;
+      font-size: 13px;
+      padding: 4px 12px;
+      gap: 6px;
+    }
+
+    .tray-clock {
+      border-top: 2px solid var(--win-dark);
+      border-left: 2px solid var(--win-dark);
+      border-right: 2px solid var(--win-light);
+      border-bottom: 2px solid var(--win-light);
+      padding: 4px 12px;
+      font-family: monospace;
+    }
+
+    /* Start Menu Popup */
+    .start-menu {
+      position: fixed;
+      bottom: 36px;
+      left: 4px;
+      width: 220px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .start-menu.open {
+      display: flex;
+    }
+
+    .start-side {
+      background: linear-gradient(180deg, #000080, #1084D0);
+      color: #fff;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 10px 6px;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+
+    .start-items {
+      flex: 1;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .start-item {
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .start-item:hover {
+      background: var(--win-blue);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop Icons -->
+  <div class="desktop-icons">
+    <div class="desk-icon" onclick="bringToFront('winPaint')">
+      <div class="desk-icon-box">🎨</div>
+      <span>画图板 Paint.exe</span>
+    </div>
+    <div class="desk-icon" onclick="bringToFront('winAmp')">
+      <div class="desk-icon-box">💿</div>
+      <span>千禧播放器 WinAmp</span>
+    </div>
+    <div class="desk-icon" onclick="bringToFront('winNote')">
+      <div class="desk-icon-box">📝</div>
+      <span>设计说明 Readme.txt</span>
+    </div>
+    <a href="index.html" class="desk-icon">
+      <div class="desk-icon-box">🖥️</div>
+      <span>返回总控台 Index</span>
+    </a>
+  </div>
+
+  <!-- Window 1: Pixel Paint 98 -->
+  <div class="win98-window" id="winPaint" style="top: 36px; left: 130px; width: 510px;">
+    <div class="win-titlebar">
+      <span>🎨 untitled.bmp - PixelPaint 98 (拖拽标题栏可移动窗口)</span>
+      <div class="win-controls">
+        <button class="win-btn win-close-btn" onclick="this.closest('.win98-window').style.display='none'">X</button>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="paint-toolbar">
+        <div class="swatch active" style="background:#000000" data-color="#000000"></div>
+        <div class="swatch" style="background:#FF0055" data-color="#FF0055"></div>
+        <div class="swatch" style="background:#0000FF" data-color="#0000FF"></div>
+        <div class="swatch" style="background:#00AA00" data-color="#00AA00"></div>
+        <div class="swatch" style="background:#FFFF00" data-color="#FFFF00"></div>
+        <div class="swatch" style="background:#00FFFF" data-color="#00FFFF"></div>
+        <div class="swatch" style="background:#FFFFFF" data-color="#FFFFFF"></div>
+        <button class="win-btn" id="stampBtn">★ 盖千禧印章</button>
+        <button class="win-btn" id="clearPaintBtn">清空画布</button>
+      </div>
+      <div class="sunken-box" style="display:inline-block;">
+        <canvas id="paintCanvas" width="476" height="270" style="cursor:crosshair; display:block;"></canvas>
+      </div>
+      <div style="margin-top:6px; color:#333;">提示：在白色画布上按住鼠标即可涂鸦创作，或点击「盖千禧印章」。</div>
+    </div>
+  </div>
+
+  <!-- Window 2: Y2K Chiptune Synthesizer Player -->
+  <div class="win98-window" id="winAmp" style="top: 60px; left: 670px; width: 360px;">
+    <div class="win-titlebar">
+      <span>💿 CYBERAMP 2000 // Y2K SYNTH</span>
+      <div class="win-controls">
+        <button class="win-btn win-close-btn" onclick="this.closest('.win98-window').style.display='none'">X</button>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="sunken-box" style="background:#000; color:#00FF00; padding:12px; font-family:monospace; margin-bottom:10px;">
+        <div id="trackTitle">TRACK 01: DIAL-UP DREAMS (1999.MID)</div>
+        <div style="font-size:20px; margin:6px 0;" id="playerTime">00:00 // 128 KBPS</div>
+        <div style="color:#00FFFF;" id="asciiEq">▃▅▇█▂▄▆█▄▂▅▇▃▅▂</div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="win-btn" id="y2kPlayBtn" style="flex:1; font-weight:bold;">▶ 播放复古电子乐</button>
+        <button class="win-btn" id="modemBtn">☎ 56K 拨号音</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Window 3: Notepad Readme -->
+  <div class="win98-window" id="winNote" style="top: 300px; left: 660px; width: 410px;">
+    <div class="win-titlebar">
+      <span>📝 STYLE_05_README.TXT - 记事本</span>
+      <div class="win-controls">
+        <button class="win-btn win-close-btn" onclick="this.closest('.win98-window').style.display='none'">X</button>
+      </div>
+    </div>
+    <div class="win-body">
+      <textarea class="sunken-box" style="width:100%; height:150px; padding:8px; font-family:monospace; font-size:12px; resize:none;">=== 风格 05：Y2K 千禧年复古操作系统 ===
+
+1. 纯正 Windows 98 像素级高光/阴影双层凹凸边框（#FFFFFF 与 #808080 经典斜切）。
+2. 所有窗口均支持按住蓝色渐变标题栏自由拖拽与层级置顶。
+3. 左侧内置真实可用的【画图板 Paint.exe】，上方内置 WebAudio 驱动的【千禧电子乐与 56K 调制解调器拨号音模拟器】。
+4. 点击底部「开始 Start」菜单可切换桌面壁纸或跳转下一风格。</textarea>
+    </div>
+  </div>
+
+  <!-- Start Menu Popup -->
+  <div class="win98-window start-menu" id="startMenu">
+    <div class="start-side">CYBER 98</div>
+    <div class="start-items">
+      <div class="start-item" onclick="setDesktopColor('#008080')">🟩 经典祖母绿桌面</div>
+      <div class="start-item" onclick="setDesktopColor('#3A6EA5')">🟦 千禧深空蓝桌面</div>
+      <div class="start-item" onclick="setDesktopColor('#4A235A')">🟪 蒸汽波暗紫桌面</div>
+      <hr style="margin:4px 0;">
+      <a href="06-zen-minimalist.html" class="start-item">🍵 下一风格: 东方茶道 →</a>
+      <a href="index.html" class="start-item">🏠 返回总控导航台</a>
+    </div>
+  </div>
+
+  <!-- Bottom Taskbar -->
+  <div class="taskbar">
+    <div class="taskbar-left">
+      <button class="win-btn start-btn" id="startBtn">🪟 开始 Start</button>
+      <button class="win-btn" onclick="bringToFront('winPaint')">🎨 PixelPaint 98</button>
+      <button class="win-btn" onclick="bringToFront('winAmp')">💿 CyberAmp 2000</button>
+      <a href="index.html" class="win-btn">← 返回总控台</a>
+      <a href="06-zen-minimalist.html" class="win-btn">06 东方禅意 →</a>
+    </div>
+    <div class="tray-clock" id="trayClock">08:06 AM</div>
+  </div>
+
+  <script>
+    // Window Z-Index & Dragging
+    let topZ = 20;
+    function bringToFront(id) {
+      const win = document.getElementById(id);
+      win.style.display = 'block';
+      win.style.zIndex = ++topZ;
+    }
+
+    document.querySelectorAll('.win98-window').forEach(win => {
+      win.addEventListener('mousedown', () => {
+        win.style.zIndex = ++topZ;
+      });
+      const bar = win.querySelector('.win-titlebar');
+      if (!bar) return;
+      let dragging = false, ox = 0, oy = 0;
+      bar.addEventListener('mousedown', (e) => {
+        dragging = true;
+        ox = e.clientX - win.offsetLeft;
+        oy = e.clientY - win.offsetTop;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        win.style.left = (e.clientX - ox) + 'px';
+        win.style.top = Math.max(0, e.clientY - oy) + 'px';
+      });
+      window.addEventListener('mouseup', () => dragging = false);
+    });
+
+    // Paint Canvas
+    const pCanvas = document.getElementById('paintCanvas');
+    const pCtx = pCanvas.getContext('2d');
+    pCtx.fillStyle = '#FFFFFF';
+    pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+
+    // Draw initial retro greeting
+    pCtx.fillStyle = '#000080';
+    pCtx.font = 'bold 18px Tahoma';
+    pCtx.fillText('WELCOME TO YEAR 2000 // DRAW HERE!', 55, 50);
+    pCtx.strokeStyle = '#FF0055';
+    pCtx.lineWidth = 3;
+    pCtx.strokeRect(40, 22, 390, 42);
+
+    let drawing = false;
+    let penColor = '#000000';
+
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.onclick = () => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        penColor = sw.dataset.color;
+      };
+    });
+
+    pCanvas.addEventListener('mousedown', (e) => {
+      drawing = true;
+      pCtx.beginPath();
+      pCtx.moveTo(e.offsetX, e.offsetY);
+    });
+    pCanvas.addEventListener('mousemove', (e) => {
+      if (!drawing) return;
+      pCtx.strokeStyle = penColor;
+      pCtx.lineWidth = 4;
+      pCtx.lineCap = 'round';
+      pCtx.lineTo(e.offsetX, e.offsetY);
+      pCtx.stroke();
+    });
+    window.addEventListener('mouseup', () => drawing = false);
+
+    document.getElementById('clearPaintBtn').onclick = () => {
+      pCtx.fillStyle = '#FFFFFF';
+      pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+    };
+
+    document.getElementById('stampBtn').onclick = () => {
+      const stamps = ['★ Y2K BUG OK!', '💿 1999 ONLINE', '👾 PIXEL POWER', '⚡ CYBER 98'];
+      const txt = stamps[Math.floor(Math.random() * stamps.length)];
+      const x = 30 + Math.random() * 280;
+      const y = 80 + Math.random() * 160;
+      pCtx.fillStyle = '#FFFF00';
+      pCtx.fillRect(x, y - 22, 150, 30);
+      pCtx.strokeStyle = '#000';
+      pCtx.lineWidth = 2;
+      pCtx.strokeRect(x, y - 22, 150, 30);
+      pCtx.fillStyle = '#FF0055';
+      pCtx.font = 'bold 14px monospace';
+      pCtx.fillText(txt, x + 10, y - 2);
+    };
+
+    // Chiptune Synth & 56K Modem
+    let audioCtx = null;
+    let chipTimer = null;
+    let isPlayingChip = false;
+
+    document.getElementById('y2kPlayBtn').onclick = function() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      isPlayingChip = !isPlayingChip;
+      if (isPlayingChip) {
+        this.textContent = '⏹ 停止播放';
+        const melody = [261.6, 329.6, 392.0, 523.2, 392.0, 329.6, 293.6, 349.2];
+        let idx = 0;
+        chipTimer = setInterval(() => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.value = melody[idx % melody.length];
+          g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.16);
+          osc.connect(g);
+          g.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.16);
+          idx++;
+          const bars = '▂▃▄▅▆▇█'.split('');
+          document.getElementById('asciiEq').textContent = Array.from({length: 16}, () => bars[Math.floor(Math.random()*bars.length)]).join('');
+        }, 180);
+      } else {
+        this.textContent = '▶ 播放复古电子乐';
+        clearInterval(chipTimer);
+      }
+    };
+
+    document.getElementById('modemBtn').onclick = () => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.setValueAtTime(1400, now + 0.12);
+      osc.frequency.setValueAtTime(2100, now + 0.25);
+      osc.frequency.setValueAtTime(1100, now + 0.4);
+      g.gain.setValueAtTime(0.15, now);
+      g.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.55);
+    };
+
+    // Start menu toggle
+    const startBtn = document.getElementById('startBtn');
+    const startMenu = document.getElementById('startMenu');
+    startBtn.onclick = (e) => {
+      e.stopPropagation();
+      startMenu.classList.toggle('open');
+    };
+    window.addEventListener('click', () => startMenu.classList.remove('open'));
+
+    function setDesktopColor(c) {
+      document.body.style.backgroundColor = c;
+    }
+
+    setInterval(() => {
+      const d = new Date();
+      document.getElementById('trayClock').textContent = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }, 1000);
+  </script>
+</body>
+</html>

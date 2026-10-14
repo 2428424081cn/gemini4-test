@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 // HYPER.PULSE 2026 — 动态字体与酸性电子音乐节</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --acid-lime: #CCFF00;
+      --acid-violet: #7000FF;
+      --acid-silver: #E2E6EC;
+      --void: #08080A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--void);
+      color: var(--acid-silver);
+      font-family: 'Syne', 'PingFang SC', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body.invert-strobe {
+      background-color: var(--acid-lime);
+      color: #000;
+    }
+
+    /* Diagonal Kinetic Ticker */
+    .kinetic-ribbon {
+      background: var(--acid-lime);
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-bottom: 2px solid #000;
+    }
+
+    .ribbon-track {
+      display: inline-block;
+      animation: scrollFast 14s linear infinite;
+    }
+
+    @keyframes scrollFast {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    header.rave-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 36px;
+      border-bottom: 1px solid rgba(204, 255, 0, 0.35);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .acid-btn {
+      background: transparent;
+      color: var(--acid-lime);
+      border: 1.5px solid var(--acid-lime);
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .acid-btn:hover, .acid-btn.active {
+      background: var(--acid-lime);
+      color: #000;
+      box-shadow: 0 0 25px rgba(204, 255, 0, 0.65);
+    }
+
+    /* Kinetic Stretch Hero */
+    .kinetic-hero {
+      padding: 40px 36px;
+      border-bottom: 1px solid rgba(204, 255, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kinetic-line {
+      font-size: clamp(46px, 8vw, 118px);
+      font-weight: 800;
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      transition: transform 0.08s ease-out;
+      will-change: transform;
+      display: block;
+    }
+
+    .outline-text {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--acid-lime);
+    }
+
+    /* Lineup & Ticket Builder Grid */
+    .festival-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1024px) {
+      .festival-grid { grid-template-columns: 1fr; }
+    }
+
+    .stage-column {
+      padding: 36px;
+      border-right: 1px solid rgba(204, 255, 0, 0.35);
+    }
+
+    .stage-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .artist-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .artist-row:hover {
+      background: var(--acid-violet);
+      color: #fff;
+      padding-left: 28px;
+    }
+
+    .artist-name {
+      font-size: 28px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .artist-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: var(--acid-lime);
+    }
+
+    /* Interactive Holographic Rave Pass Generator */
+    .pass-column {
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rave-ticket {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(135deg, #16161D 0%, #260058 55%, #0D0D12 100%);
+      border: 2px solid var(--acid-lime);
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(112, 0, 255, 0.45);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .chrome-star {
+      width: 64px;
+      height: 64px;
+      animation: spinStar 8s linear infinite;
+    }
+
+    @keyframes spinStar {
+      100% { transform: rotate(360deg); }
+    }
+
+    .barcode {
+      height: 46px;
+      margin-top: 20px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--acid-lime) 0px,
+        var(--acid-lime) 3px,
+        transparent 3px,
+        transparent 7px,
+        var(--acid-lime) 7px,
+        var(--acid-lime) 9px,
+        transparent 9px,
+        transparent 14px
+      );
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kinetic-ribbon">
+    <div class="ribbon-track">
+      ✺ STYLE 10: KINETIC TYPOGRAPHY & ACID RAVE // MOVE YOUR MOUSE TO WARP HEADLINES // BERLIN — TOKYO — SHANGHAI // 140 BPM AUDIO REACTIVE ✺ STYLE 10: KINETIC TYPOGRAPHY & ACID RAVE // MOVE YOUR MOUSE TO WARP HEADLINES // BERLIN — TOKYO — SHANGHAI // 140 BPM AUDIO REACTIVE
+    </div>
+  </div>
+
+  <header class="rave-nav">
+    <div style="font-family:'Space Mono'; font-weight:700; font-size:18px;">
+      [STYLE #10] HYPER.PULSE // KINETIC FESTIVAL
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="acid-btn" id="strobeBtn">⚡ 切换高反差酸性反转色</button>
+      <a href="01-neo-brutalism.html" class="acid-btn">↺ 回到 01 粗野主义</a>
+      <a href="index.html" class="acid-btn active">★ 返回十风格评审总控台</a>
+    </div>
+  </header>
+
+  <!-- Mouse-Reactive Kinetic Typography Hero -->
+  <section class="kinetic-hero" id="kineticArea">
+    <span class="kinetic-line" id="kLine1">ACID CHROME</span>
+    <span class="kinetic-line outline-text" id="kLine2">KINETIC SOUND</span>
+    <span class="kinetic-line" id="kLine3" style="color:var(--acid-lime);">SYNTHESIS 2026</span>
+    <p style="font-family:'Space Mono'; font-size:13px; margin-top:16px; opacity:0.8;">
+      [互动提示] 在上方巨型字体区域移动鼠标，实时体验动态斜切与多轴字宽形变 (Kinetic Distortion)。
+    </p>
+  </section>
+
+  <main class="festival-grid">
+    <!-- Left: Interactive Stage Lineup -->
+    <section class="stage-column">
+      <div class="stage-tabs">
+        <button class="acid-btn active" data-stage="all">ALL STAGES (05)</button>
+        <button class="acid-btn" data-stage="MAIN DOME">MAIN DOME 主舞台</button>
+        <button class="acid-btn" data-stage="ACID BUNKER">ACID BUNKER 地下堡垒</button>
+      </div>
+
+      <div id="lineupContainer">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- Right: Live Rave Pass Customizer -->
+    <section class="pass-column">
+      <div class="rave-ticket" id="raveTicket">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11px; color:var(--acid-lime);">ALL-ACCESS HOLOGRAPHIC PASS</div>
+            <div style="font-size:24px; font-weight:700; font-family:'Syne';" id="passHolder">RAVER // VIP-01</div>
+          </div>
+          <!-- Acid Chrome Star SVG -->
+          <svg class="chrome-star" viewBox="0 0 100 100">
+            <polygon points="50,0 61,36 98,36 68,58 79,94 50,72 21,94 32,58 2,36 39,36" fill="#CCFF00"/>
+          </svg>
+        </div>
+
+        <div style="margin:22px 0; border-top:1px dashed rgba(204,255,0,0.4); border-bottom:1px dashed rgba(204,255,0,0.4); padding:14px 0;">
+          <div style="font-size:12px; opacity:0.7;">SELECTED HEADLINER SET:</div>
+          <div style="font-size:20px; color:var(--acid-lime); font-weight:700; margin-top:4px;" id="passArtist">KOBOSIL b2b SPFDJ</div>
+          <div style="font-size:12px; margin-top:4px;" id="passStage">STAGE: ACID BUNKER // 02:00 AM</div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="nameInput" placeholder="输入你的 RAVER 代号生成通票..." style="flex:1; background:#000; border:1px solid var(--acid-lime); color:var(--acid-lime); padding:10px; font-family:'Space Mono';">
+          <button class="acid-btn active" id="mintPassBtn">生成</button>
+        </div>
+
+        <div class="barcode"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Kinetic Typography Mouse Distortion
+    const hero = document.getElementById('kineticArea');
+    const l1 = document.getElementById('kLine1');
+    const l2 = document.getElementById('kLine2');
+    const l3 = document.getElementById('kLine3');
+
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
+
+      l1.style.transform = `translateX(${nx * 70}px) skewX(${nx * -24}deg) scaleY(${1 + Math.abs(ny) * 0.25})`;
+      l2.style.transform = `translateX(${-nx * 90}px) skewX(${nx * 28}deg)`;
+      l3.style.transform = `translateX(${nx * 50}px) scaleX(${1 + nx * 0.18})`;
+    });
+
+    hero.addEventListener('mouseleave', () => {
+      l1.style.transform = '';
+      l2.style.transform = '';
+      l3.style.transform = '';
+    });
+
+    // Lineup Data & Filtering
+    const artists = [
+      { name: 'KOBOSIL b2b SPFDJ', stage: 'ACID BUNKER', time: '02:00 - 04:30', bpm: '148 BPM' },
+      { name: 'CHARLOTTE DE WITTE', stage: 'MAIN DOME', time: '00:30 - 02:00', bpm: '138 BPM' },
+      { name: 'BRUTALISMUS 3000', stage: 'ACID BUNKER', time: '23:00 - 00:30', bpm: '155 BPM' },
+      { name: 'BICEP (CHROMA AV DJ)', stage: 'MAIN DOME', time: '21:30 - 23:00', bpm: '132 BPM' },
+      { name: 'I HATE MODELS', stage: 'ACID BUNKER', time: '04:30 - CLOSE', bpm: '152 BPM' }
+    ];
+
+    const lineupEl = document.getElementById('lineupContainer');
+    function renderLineup(stageFilter = 'all') {
+      lineupEl.innerHTML = '';
+      artists
+        .filter(a => stageFilter === 'all' || a.stage === stageFilter)
+        .forEach(a => {
+          const row = document.createElement('div');
+          row.className = 'artist-row';
+          row.innerHTML = `
+            <div>
+              <div class="artist-name">${a.name}</div>
+              <div style="font-size:13px; opacity:0.75;">${a.stage} // ${a.time}</div>
+            </div>
+            <div class="artist-meta">${a.bpm} →</div>
+          `;
+          row.onclick = () => {
+            document.getElementById('passArtist').textContent = a.name;
+            document.getElementById('passStage').textContent = `STAGE: ${a.stage} // ${a.time}`;
+          };
+          lineupEl.appendChild(row);
+        });
+    }
+
+    document.querySelectorAll('.stage-tabs .acid-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.stage-tabs .acid-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderLineup(btn.dataset.stage);
+      };
+    });
+
+    document.getElementById('mintPassBtn').onclick = () => {
+      const val = document.getElementById('nameInput').value.trim();
+      if (val) {
+        document.getElementById('passHolder').textContent = val.toUpperCase() + ' // VIP';
+      }
+    };
+
+    document.getElementById('strobeBtn').onclick = () => {
+      document.body.classList.toggle('invert-strobe');
+    };
+
+    renderLineup();
+  </script>
+</body>
+</html>

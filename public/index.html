@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ʮ�ͬ���ǰ�����ҽ�����վ // ������Ԥ������ - PORTAL HUB</title>
-  <meta name="description" content="���Ӻ�ʮ�ײ�ͬ��Ʒ����ȫ��ǰ��ԭ����������ģ�����õ����ҽ�����վչʾ�뼴ʱ����ϵͳ��">
-  <link rel="stylesheet" href="./shared/switcher.css">
+  <title>十种极致前端风格全景测试舱 // FRONTEND AESTHETIC BENCHMARK</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
     :root {
-      --hub-bg: #0b0d14;
-      --hub-card-bg: rgba(20, 24, 38, 0.7);
-      --hub-border: rgba(255, 255, 255, 0.1);
-      --hub-primary: #6366f1;
-      --hub-accent: #38bdf8;
-      --hub-text: #f8fafc;
-      --hub-muted: #94a3b8;
+      --bg: #090A0F;
+      --card: #12151E;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #6366F1;
+      --text: #F3F4F6;
+      --muted: #9CA3AF;
     }
 
     * {
@@ -26,882 +23,389 @@
     }
 
     body {
-      background-color: var(--hub-bg);
-      color: var(--hub-text);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.6;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.18) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.15) 0px, transparent 50%);
-      background-attachment: fixed;
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.14), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(236, 72, 153, 0.12), transparent 40%);
     }
 
-    .hub-container {
-      max-width: 1320px;
+    header.benchmark-header {
+      max-width: 1480px;
       margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    /* ���� HERO */
-    .hub-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .hub-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 18px;
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      border-radius: 999px;
-      color: #a5b4fc;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .hub-title {
-      font-size: 46px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1.2;
-      margin-bottom: 18px;
-      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hub-subtitle {
-      font-size: 18px;
-      color: var(--hub-muted);
-      max-width: 780px;
-      margin: 0 auto 32px;
-    }
-
-    /* ���Ĺ淶ָ�� */
-    .hub-guarantees {
+      padding: 36px 32px 24px;
       display: flex;
-      justify-content: center;
-      gap: 16px;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
-      margin-bottom: 40px;
+      gap: 20px;
     }
 
-    .guarantee-chip {
+    .title-group h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-top: 8px;
+    }
+
+    .tag-pill {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #A5B4FC;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    /* Interactive Judge Scoreboard */
+    .score-widget {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--hub-border);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 600;
+      gap: 20px;
     }
 
-    .guarantee-chip span.emoji {
-      font-size: 16px;
+    .total-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 800;
+      color: #34D399;
     }
 
-    /* ����������ͼ�л� */
-    .hub-controls {
+    /* Live Iframe Drawer */
+    .preview-drawer {
+      max-width: 1480px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+      display: none;
+    }
+
+    .preview-drawer.active {
+      display: block;
+    }
+
+    .iframe-shell {
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
+    }
+
+    .iframe-bar {
+      background: #181B26;
+      padding: 10px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--hub-border);
-      padding: 12px 24px;
-      border-radius: 16px;
-      margin-bottom: 36px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .view-switch-btns {
-      display: flex;
-      gap: 8px;
-    }
-
-    .view-btn {
-      background: transparent;
-      border: 1px solid var(--hub-border);
-      color: var(--hub-muted);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13.5px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .view-btn.active {
-      background: var(--hub-primary);
-      border-color: var(--hub-primary);
-      color: #fff;
-    }
-
-    .hub-scoring-shortcut {
-      background: linear-gradient(135deg, #a855f7, #6366f1);
-      color: #fff;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
     }
 
-    .hub-scoring-shortcut:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
+    iframe#liveFrame {
+      width: 100%;
+      height: 580px;
+      border: none;
+      display: block;
+      background: #fff;
     }
 
-    /* ��ͼ 1: 10 �׿�Ƭ�������� */
-    .style-cards-grid {
+    /* 10 Cards Grid */
+    .cards-grid {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 32px 64px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
+      gap: 22px;
+    }
+
+    @media (max-width: 520px) {
+      .cards-grid { grid-template-columns: 1fr; }
     }
 
     .style-card {
-      background: var(--hub-card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--hub-border);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      overflow: hidden;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
       position: relative;
+      overflow: hidden;
     }
 
     .style-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(99, 102, 241, 0.5);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.15);
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.28);
     }
 
-    .card-top-preview {
-      height: 150px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    .swatch-strip {
+      height: 6px;
+      width: 100%;
+      border-radius: 999px;
+      margin-bottom: 18px;
     }
 
-    .preview-icon-huge {
-      font-size: 64px;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-      transition: transform 0.3s;
+    .card-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .style-card:hover .preview-icon-huge {
-      transform: scale(1.15) rotate(4deg);
-    }
-
-    .card-badge-abs {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .card-color-palette {
-      position: absolute;
-      bottom: 12px;
-      right: 14px;
-      display: flex;
-      gap: 6px;
-    }
-
-    .palette-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .card-content-wrap {
-      padding: 24px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-title-text {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-      color: #fff;
-    }
-
-    .card-subtitle-tag {
-      font-size: 12.5px;
-      color: var(--hub-accent);
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .card-desc-text {
-      font-size: 13.5px;
-      color: var(--hub-muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
-      flex: 1;
-    }
-
-    .card-feature-pills {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .feature-pill {
-      font-size: 11px;
-      padding: 3px 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 6px;
-      color: #cbd5e1;
-    }
-
-    .card-actions-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-open-full {
-      flex: 1;
-      text-align: center;
-      background: var(--hub-primary);
-      color: #fff;
-      text-decoration: none;
+    .card-title {
+      font-size: 21px;
       font-weight: 700;
-      font-size: 13.5px;
-      padding: 10px 16px;
-      border-radius: 10px;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      margin: 6px 0 10px;
     }
 
-    .btn-open-full:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
+    .card-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 18px;
     }
 
-    .btn-preview-sim {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--hub-border);
-      color: #fff;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-preview-sim:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* ��ͼ 2: ��ʱ�豸ģ���� (Iframe Simulator) */
-    #simulator-view {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .sim-toolbar {
+    .card-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      max-width: 1080px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--hub-border);
-      padding: 10px 20px;
-      border-radius: 14px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      gap: 10px;
       flex-wrap: wrap;
-      gap: 12px;
     }
 
-    .sim-select-group {
+    .btn-link {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      transition: all 0.15s;
+    }
+
+    .btn-link:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .rate-box {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .sim-select {
-      background: #141724;
-      border: 1px solid var(--hub-border);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 8px;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
-      outline: none;
-      cursor: pointer;
     }
 
-    .device-toggles {
-      display: flex;
-      gap: 8px;
-    }
-
-    .device-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--hub-border);
-      color: var(--hub-muted);
-      padding: 6px 12px;
+    .rate-input {
+      width: 56px;
+      background: #090A0F;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #34D399;
+      padding: 5px 8px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .device-btn.active {
-      background: var(--hub-primary);
-      color: #fff;
-      border-color: var(--hub-primary);
-    }
-
-    .sim-frame-wrap {
-      width: 100%;
-      max-width: 1200px;
-      height: 750px;
-      background: #000;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-      transition: max-width 0.3s ease;
-    }
-
-    #sim-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* �ײ�ͨ�������ܽ� */
-    .hub-review-summary-card {
-      margin-top: 60px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(56, 189, 248, 0.08));
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: 20px;
-      padding: 36px;
+      font-family: inherit;
+      font-weight: 700;
       text-align: center;
-    }
-
-    .hub-rev-title {
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .hub-rev-sub {
-      color: var(--hub-muted);
-      font-size: 15px;
-      max-width: 680px;
-      margin: 0 auto 24px;
-    }
-
-    .hub-rev-btn {
-      background: linear-gradient(135deg, #6366f1, #38bdf8);
-      color: #fff;
-      border: none;
-      font-weight: 800;
-      font-size: 15px;
-      padding: 12px 32px;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-      transition: all 0.2s;
-    }
-
-    .hub-rev-btn:hover {
-      filter: brightness(1.1);
-      transform: translateY(-2px);
-    }
-
-    .hub-footer {
-      text-align: center;
-      margin-top: 48px;
-      font-size: 13px;
-      color: #64748b;
     }
   </style>
 </head>
 <body>
-  <div class="hub-container">
-    <!-- ���� HERO -->
-    <header class="hub-header">
-      <div class="hub-tag">
-        <span>?</span>
-        <span>��ǰ��ԭ������ �� �ܾ�Ԥ��ģ��</span>
-      </div>
-      <h1 class="hub-title">ʮ�ͬ������ҽ�����վ<br>ȫ��Ԥ�����������</h1>
-      <p class="hub-subtitle">
-        ���ͬһ������Ӻ� �� ����ȫջϵͳ�ܹ�ʦ & ���⽻������ʦ���������ںˣ���ʮ����Ȼ��ͬ���Ӿ���ѧ�뽻��ģ�ͣ�չ�ִ�ԭ�� Web ����ĸ�ά����������
-      </p>
 
-      <div class="hub-guarantees">
-        <div class="guarantee-chip"><span class="emoji">??</span> 10 �ֵ߸����������</div>
-        <div class="guarantee-chip"><span class="emoji">??</span> 0 ���ģ����Ԥ�ƿ�����</div>
-        <div class="guarantee-chip"><span class="emoji">?</span> Web Audio ԭ����Ч�ϳ�</div>
-        <div class="guarantee-chip"><span class="emoji">??</span> ȫ��д CSS / Grid / Canvas</div>
-        <div class="guarantee-chip"><span class="emoji">?</span> ���׼�ʱ������������</div>
-      </div>
-    </header>
-
-    <!-- �����л��� -->
-    <div class="hub-controls">
-      <div class="view-switch-btns">
-        <button class="view-btn active" id="btn-view-grid">??? ���Ⱦ�����ͼ</button>
-        <button class="view-btn" id="btn-view-sim">?? ��ʱ���ģ����</button>
-      </div>
-
-      <button class="hub-scoring-shortcut" id="btn-open-scoring-hub">
-        <span>?</span>
-        <span>������ί������</span>
-      </button>
+  <header class="benchmark-header">
+    <div class="title-group">
+      <span class="tag-pill">10 DISTINCT FRONTEND ARCHITECTURES // ZERO TEMPLATES</span>
+      <h1>十种完全不同风格的前端页面 · 评测总控台</h1>
     </div>
 
-    <!-- ��ͼ 1: ���Ƭ������� -->
-    <div class="style-cards-grid" id="grid-view">
-      <!-- ��� 1 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: radial-gradient(circle, #08281a, #07090e);">
-          <div class="preview-icon-huge">?</div>
-          <span class="card-badge-abs">01 / CYBERPUNK</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#00ff66;"></div>
-            <div class="palette-dot" style="background:#00f0ff;"></div>
-            <div class="palette-dot" style="background:#ff0055;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">01. �����ڿ� / �޺��ն�</h3>
-          <div class="card-subtitle-tag">CYBERPUNK TERMINAL</div>
-          <p class="card-desc-text">
-            Matrix �����ַ��ꡢ����� CRT ɨ���߰��ǡ�ʵʱ�ɽ��������У����� help/skills/projects�������ַ�����������
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">Canvas �ַ���</span>
-            <span class="feature-pill">��ʵ Bash ����</span>
-            <span class="feature-pill">��Ƶ����</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-01-cyberpunk/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-01-cyberpunk/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
+    <div class="score-widget">
+      <div>
+        <div style="font-size:12px; color:var(--muted);">考官实时总评分 (满分 100)</div>
+        <div style="font-size:12px; color:#A5B4FC;">可在下方每张卡片单独打分 (0-10分)</div>
       </div>
-
-      <!-- ��� 2 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: linear-gradient(135deg, #FFE600, #FF5E97);">
-          <div class="preview-icon-huge">??</div>
-          <span class="card-badge-abs">02 / NEO-BRUTALISM</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#FFE600;"></div>
-            <div class="palette-dot" style="background:#FF5E97;"></div>
-            <div class="palette-dot" style="background:#00F5D4;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">02. ��Ұ���� / �Ϸ�˹����</h3>
-          <div class="card-subtitle-tag">NEO-BRUTALISM POP</div>
-          <p class="card-desc-text">
-            ���� 3.5px ������ߡ�Ӳ��ʵɫ��Ӳ��Ӱ���߱���ײɫ���տ�Ƭ��������ͨ�桢֧��������ק�ͱ��Ƶ�Ȥζ��ֽϵͳ��
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">Ӳ��ͶӰ</span>
-            <span class="feature-pill">�ŷ���ֽ����</span>
-            <span class="feature-pill">�����ƶ�Ч</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-02-neobrutalism/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-02-neobrutalism/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 3 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: radial-gradient(circle, #1e3a8a, #090a0f);">
-          <div class="preview-icon-huge">?</div>
-          <span class="card-badge-abs">03 / GLASSMORPHISM</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#38bdf8;"></div>
-            <div class="palette-dot" style="background:#a855f7;"></div>
-            <div class="palette-dot" style="background:#ffffff;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">03. �����ζ / Һ̬ĥɰ</h3>
-          <div class="card-subtitle-tag">APPLE GLASSMORPHISM</div>
-          <p class="card-desc-text">
-            ����˹ģ��������̬��������������ɫ�ߡ���Ƭ���۹�Ƹ��棨Spotlight�����߼������ʸ��Ű������ˮ����Ч��
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">��̬�۹�Ƹ���</span>
-            <span class="feature-pill">ĥɰ����</span>
-            <span class="feature-pill">΢��������</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-03-glassmorphism/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-03-glassmorphism/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 4 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: #008080;">
-          <div class="preview-icon-huge">??</div>
-          <span class="card-badge-abs">04 / RETRO WIN95</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#008080;"></div>
-            <div class="palette-dot" style="background:#c0c0c0;"></div>
-            <div class="palette-dot" style="background:#000080;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">04. ���� Win95 ����ϵͳ</h3>
-          <div class="card-subtitle-tag">RETRO WINDOWS 95 OS</div>
-          <p class="card-desc-text">
-            �����ɫ����߿�������ͼ�ꡢ������ק���ڡ���ʼ�˵����ײ�������ʱ�����̣��Լ���ʵ���� 8x8 ɨ��С��Ϸ��
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">����ק�ര��</span>
-            <span class="feature-pill">��ʵɨ��С��Ϸ</span>
-            <span class="feature-pill">��ʼ�˵�ϵͳ</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-04-retro-os/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-04-retro-os/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 5 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: #f5f2e9;">
-          <div class="preview-icon-huge" style="filter:none;">??</div>
-          <span class="card-badge-abs" style="background:rgba(27,28,29,0.8);">05 / ZEN CHINESE INK</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#b92b27;"></div>
-            <div class="palette-dot" style="background:#1b1c1d;"></div>
-            <div class="palette-dot" style="background:#375344;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">05. ����ʽˮī���⻭��</h3>
-          <div class="card-subtitle-tag">TRADITIONAL ZEN INK</div>
-          <p class="card-desc-text">
-            ��ֽ�������ơ���껮��ˮī��Ⱦ�������桢��ɰ��ӡ�¡������鷨ʫ�Ⲽ���뻭������ʽ������Ŀ���С�
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">Canvas ˮī��Ⱦ</span>
-            <span class="feature-pill">���ӡ��</span>
-            <span class="feature-pill">����ˮ����</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-05-zen-ink/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-05-zen-ink/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 6 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: linear-gradient(135deg, #ff00a0, #7928ca, #00fff2);">
-          <div class="preview-icon-huge">??</div>
-          <span class="card-badge-abs">06 / Y2K CHROME</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#ff00a0;"></div>
-            <div class="palette-dot" style="background:#00fff2;"></div>
-            <div class="palette-dot" style="background:#ffffff;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">06. ǧ�� Y2K Һ̬����</h3>
-          <div class="card-subtitle-tag">Y2K LIQUID CHROME</div>
-          <p class="card-desc-text">
-            ȫϢ�ʺ�ɫ��������ˮ������߹⡢����������� 3D ��ת��ǧ�� CD ���̡�͸��������б��Ƭ��δ��������â�ꡣ
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">3D �Ӳ� CD ��Ƭ</span>
-            <span class="feature-pill">ȫϢҺ̬����</span>
-            <span class="feature-pill">3D ��������б</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-06-y2k-chrome/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-06-y2k-chrome/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 7 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: #fcfbf8; border-bottom: 2px solid #141414;">
-          <div class="preview-icon-huge" style="color:#002FA7;">??</div>
-          <span class="card-badge-abs" style="background:#002FA7;">07 / SWISS EDITORIAL</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#141414;"></div>
-            <div class="palette-dot" style="background:#002FA7;"></div>
-            <div class="palette-dot" style="background:#fcfbf8;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">07. ��ʿƽ����־�Ű�</h3>
-          <div class="card-subtitle-tag">SWISS EDITORIAL GRID</div>
-          <p class="card-desc-text">
-            �Ͽ�����ʿ����ϵͳ���޷����߿�ͷ���⡢�����³��Ű棨Dropcap��������ڰ״���������䴿����ʿ���������IKB����
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">���ʿ�������</span>
-            <span class="feature-pill">�����³��Ű�</span>
-            <span class="feature-pill">������ʿդ��</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-07-editorial/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-07-editorial/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 8 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: #0f1015;">
-          <div class="preview-icon-huge">???</div>
-          <span class="card-badge-abs" style="background:#ff3860;">08 / 8-BIT ARCADE</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#ff3860;"></div>
-            <div class="palette-dot" style="background:#23d160;"></div>
-            <div class="palette-dot" style="background:#ffdd57;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">08. 8-Bit ���ؽֻ���Ϸ</h3>
-          <div class="card-subtitle-tag">RETRO ARCADE RPG</div>
-          <p class="card-desc-text">
-            NES ��������С�˺�����Ч��HP/MP ״̬�ۡ�RPG װ�������������񹥿���־��֧��Ͷι�ڿ������ӽ���� 8-bit ��Ч��
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">���� RPG ״̬��</span>
-            <span class="feature-pill">����뿧�Ȼ���</span>
-            <span class="feature-pill">NES ������Ч</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-08-arcade-8bit/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-08-arcade-8bit/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 9 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: radial-gradient(circle, #092147, #030610);">
-          <div class="preview-icon-huge">??</div>
-          <span class="card-badge-abs" style="background:#00f2fe; color:#000;">09 / SCI-FI HUD</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#00f2fe;"></div>
-            <div class="palette-dot" style="background:#ff7b00;"></div>
-            <div class="palette-dot" style="background:#030610;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">09. δ�����̽�� HUD</h3>
-          <div class="card-subtitle-tag">DEEP SPACE SCI-FI</div>
-          <p class="card-desc-text">
-            3D �����ǿ�ԾǨ Canvas��֧�ֵ������ռ����ٷɳۣ���ս���״���ɨ�趯�����ǽ���ϵң��ָ��������ɨ������
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">3D ����ԾǨ</span>
-            <span class="feature-pill">��ת�״���</span>
-            <span class="feature-pill">�ǽ�ң������</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-09-scifi-hud/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-09-scifi-hud/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ��� 10 -->
-      <div class="style-card">
-        <div class="card-top-preview" style="background: #f4efe6;">
-          <div class="preview-icon-huge">??</div>
-          <span class="card-badge-abs" style="background:#de9b72;">10 / WARM CLAY</span>
-          <div class="card-color-palette">
-            <div class="palette-dot" style="background:#de9b72;"></div>
-            <div class="palette-dot" style="background:#a3b899;"></div>
-            <div class="palette-dot" style="background:#c6b9cd;"></div>
-          </div>
-        </div>
-        <div class="card-content-wrap">
-          <h3 class="card-title-text">10. ������� Bento ��ǩ</h3>
-          <div class="card-subtitle-tag">WARM CLAYMORPHISM</div>
-          <p class="card-desc-text">
-            ���ֵ�����˫������Ӱ������С�������ůɫϵ��Notion-Bento ģ�黯���񡢰�ѹ�������Զ�Ч��ɸ�����ǩ����
-          </p>
-          <div class="card-feature-pills">
-            <span class="feature-pill">3D ˫��������Ӱ</span>
-            <span class="feature-pill">Bento ��ǩ����</span>
-            <span class="feature-pill">�������Դ���</span>
-          </div>
-          <div class="card-actions-row">
-            <a href="./style-10-claymorphism/index.html" class="btn-open-full" target="_blank">�´��ڶ������� �J</a>
-            <button class="btn-preview-sim" onclick="previewInSim('./style-10-claymorphism/index.html')">��ǶԤ��</button>
-          </div>
-        </div>
-      </div>
+      <div class="total-score" id="totalScoreDisplay">100 / 100</div>
     </div>
+  </header>
 
-    <!-- ��ͼ 2: ��ʱ�豸ģ���� (Iframe Simulator) -->
-    <div id="simulator-view">
-      <div class="sim-toolbar">
-        <div class="sim-select-group">
-          <span>ѡ����Է��:</span>
-          <select class="sim-select" id="sim-style-picker">
-            <option value="./style-01-cyberpunk/index.html">01. �����ڿ� / �޺��ն�</option>
-            <option value="./style-02-neobrutalism/index.html">02. ��Ұ���� / �Ϸ�˹����</option>
-            <option value="./style-03-glassmorphism/index.html">03. �����ζ / Һ̬ĥɰ</option>
-            <option value="./style-04-retro-os/index.html">04. ���� Win95 ����ϵͳ</option>
-            <option value="./style-05-zen-ink/index.html">05. ����ʽˮī���⻭��</option>
-            <option value="./style-06-y2k-chrome/index.html">06. ǧ�� Y2K Һ̬����</option>
-            <option value="./style-07-editorial/index.html">07. ��ʿƽ����־�Ű�</option>
-            <option value="./style-08-arcade-8bit/index.html">08. 8-Bit ���ؽֻ���Ϸ</option>
-            <option value="./style-09-scifi-hud/index.html">09. δ�����̽�� HUD</option>
-            <option value="./style-10-claymorphism/index.html">10. ������� Bento ��ǩ</option>
-          </select>
+  <!-- Live In-Page Preview Drawer -->
+  <section class="preview-drawer" id="previewDrawer">
+    <div class="iframe-shell">
+      <div class="iframe-bar">
+        <span id="previewTitle">LIVE PREVIEW // 01-neo-brutalism.html</span>
+        <div style="display:flex; gap:10px;">
+          <a href="01-neo-brutalism.html" target="_blank" id="openNewTabLink" class="btn-link" style="padding:4px 12px;">↗ 全屏独立打开</a>
+          <button class="btn-link" style="padding:4px 12px;" onclick="closePreview()">✕ 收起预览窗</button>
         </div>
-
-        <div class="device-toggles">
-          <button class="device-btn active" data-width="100%" data-h="750px">??? ����ȫ�� (100%)</button>
-          <button class="device-btn" data-width="820px" data-h="750px">?? ƽ��ģʽ (820px)</button>
-          <button class="device-btn" data-width="414px" data-h="750px">?? �ֻ�ģʽ (414px)</button>
-        </div>
-
-        <a href="./style-01-cyberpunk/index.html" target="_blank" class="hub-scoring-shortcut" id="sim-open-direct">
-          �´���ȫ�� �J
-        </a>
       </div>
-
-      <div class="sim-frame-wrap" id="sim-wrap">
-        <iframe id="sim-iframe" src="./style-01-cyberpunk/index.html"></iframe>
-      </div>
+      <iframe id="liveFrame" src=""></iframe>
     </div>
+  </section>
 
-    <!-- �ײ��������뿨 -->
-    <div class="hub-review-summary-card">
-      <h2 class="hub-rev-title">׼���ÿ�ʼ�������</h2>
-      <p class="hub-rev-sub">
-        ʮ�״���д������ȫ��װ������������Ե���·���ť����ʱ��������ί�����壬���Ӿ���������������϶ȡ�������Ч���������ʸ��ĸ�ά�Ƚ��������֣�
-      </p>
-      <button class="hub-rev-btn" id="btn-trigger-review">? ��������ί������</button>
-    </div>
+  <main class="cards-grid" id="cardsContainer">
+    <!-- Generated by JS -->
+  </main>
 
-    <footer class="hub-footer">
-      <div>LIN ZIHANG // 10 PURE FRONT-END CREATIVE SHOWCASE 2026</div>
-      <div>100% VANILLA HTML5, CSS3 & ES6 JS ? ZERO TEMPLATES</div>
-    </footer>
-  </div>
-
-  <script src="./shared/audio-synth.js"></script>
-  <script src="./shared/switcher.js"></script>
   <script>
-    // ��ͼ�л�
-    const gridView = document.getElementById('grid-view');
-    const simView = document.getElementById('simulator-view');
-    const btnGrid = document.getElementById('btn-view-grid');
-    const btnSim = document.getElementById('btn-view-sim');
-    const simIframe = document.getElementById('sim-iframe');
-    const simPicker = document.getElementById('sim-style-picker');
-    const simDirect = document.getElementById('sim-open-direct');
-    const simWrap = document.getElementById('sim-wrap');
-
-    btnGrid.addEventListener('click', () => {
-      btnGrid.classList.add('active');
-      btnSim.classList.remove('active');
-      gridView.style.display = 'grid';
-      simView.style.display = 'none';
-      if (window.soundEngine) window.soundEngine.playPopClick();
-    });
-
-    btnSim.addEventListener('click', () => {
-      btnSim.classList.add('active');
-      btnGrid.classList.remove('active');
-      gridView.style.display = 'none';
-      simView.style.display = 'flex';
-      if (window.soundEngine) window.soundEngine.playPopClick();
-    });
-
-    window.previewInSim = function(url) {
-      simPicker.value = url;
-      simIframe.src = url;
-      simDirect.href = url;
-      btnSim.click();
-      window.scrollTo({ top: simView.offsetTop - 20, behavior: 'smooth' });
-    };
-
-    simPicker.addEventListener('change', () => {
-      const url = simPicker.value;
-      simIframe.src = url;
-      simDirect.href = url;
-      if (window.soundEngine) window.soundEngine.playPopClick();
-    });
-
-    // �豸�ߴ��л�
-    document.querySelectorAll('.device-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const w = btn.getAttribute('data-width');
-        simWrap.style.maxWidth = w;
-        if (window.soundEngine) window.soundEngine.playPopClick();
-      });
-    });
-
-    // �����������ݴ���
-    const openScoring = () => {
-      const dockBtn = document.getElementById('sw-open-btn');
-      if (dockBtn) {
-        dockBtn.click();
-        // �Զ��е���� tab
-        setTimeout(() => {
-          const scoreTab = document.querySelector('.sw-tab-btn[data-target="tab-score"]');
-          if (scoreTab) scoreTab.click();
-        }, 50);
+    const pages = [
+      {
+        num: 'STYLE 01',
+        file: '01-neo-brutalism.html',
+        title: '新粗野主义合成器与街头贴纸实验室',
+        en: 'Neo-Brutalism Beatmaker & Sticker Lab',
+        grad: 'linear-gradient(90deg, #FFE600, #FF3366, #00E575)',
+        desc: '4px 纯黑实线边框、8px 硬边投射阴影、高饱和撞色。内置真实发声的 WebAudio 8步音序鼓机与可自由拖拽排版的街头贴纸画布。'
+      },
+      {
+        num: 'STYLE 02',
+        file: '02-cyberpunk-hud.html',
+        title: '赛博朋克深空防御战术终端 HUD',
+        en: 'Cyberpunk Orbital Tactical Radar HUD',
+        grad: 'linear-gradient(90deg, #00F0FF, #FF0055, #FFB800)',
+        desc: '多边形斜切机甲面板、CRT 扫描线与霓虹发光。搭载 60FPS 相控阵雷达（点击敌机直接发射电磁炮拦截）与命令行终端。'
+      },
+      {
+        num: 'STYLE 03',
+        file: '03-swiss-editorial.html',
+        title: '瑞士国际主义排版与建筑展览志',
+        en: 'Swiss International Typographic Grid',
+        grad: 'linear-gradient(90deg, #E62E25, #121212, #F4F1EA)',
+        desc: '致敬 Müller-Brockmann 的严格 12 列数学网格。支持一键显隐 12 栏参考线、实时调节无衬线标题字号比例与展览分类筛选。'
+      },
+      {
+        num: 'STYLE 04',
+        file: '04-glassmorphism-os.html',
+        title: '液态极光与空间计算毛玻璃系统',
+        en: 'Spatial Computing & Aurora Glassmorphism',
+        grad: 'linear-gradient(90deg, #6366F1, #EC4899, #06B6D4)',
+        desc: '多层高斯模糊毛玻璃、高光折射边与 3D 视差悬浮窗。内置全息呼吸专注光球、WebAudio 174Hz 治愈声场混音台与极光光谱切换器。'
+      },
+      {
+        num: 'STYLE 05',
+        file: '05-y2k-retro-os.html',
+        title: '千禧年复古桌面系统 (Win98 / Y2K)',
+        en: 'Y2K Retro Desktop OS 98',
+        grad: 'linear-gradient(90deg, #008080, #000080, #C0C0C0)',
+        desc: '像素级还原经典凹凸立体边框、开始菜单与多窗口拖拽层级管理。内置可绘画盖章的画图板 Paint.exe 与 56K 拨号音/电子乐播放器。'
+      },
+      {
+        num: 'STYLE 06',
+        file: '06-zen-minimalist.html',
+        title: '东方侘寂茶道与数字枯山水庭院',
+        en: 'Wabi-Sabi Tea Ceremony & Karesansui',
+        grad: 'linear-gradient(90deg, #4A5D4E, #EAE2D3, #B83B2B)',
+        desc: '温润宣纸底纹、宋刻竖排诗文与朱砂印章。可用鼠标木耙在枯山水沙盘上勾勒涟漪、置入青苔山石，并体验颂钵铜磬候汤计时。'
+      },
+      {
+        num: 'STYLE 07',
+        file: '07-luxury-watch.html',
+        title: '黑金顶奢陀飞轮高定机械腕表馆',
+        en: 'Haute Horlogerie Tourbillon Atelier',
+        grad: 'linear-gradient(90deg, #D4AF37, #F3E5AB, #1A2230)',
+        desc: '黑曜石与 18K 香槟金奢华质感。搭载实时同步走时的精细 SVG 机械腕表（含旋转陀飞轮笼架、飞返计时秒针、镂空机芯透视与表壳定制）。'
+      },
+      {
+        num: 'STYLE 08',
+        file: '08-clay-playful.html',
+        title: '3D 软泥粘土风互动盲盒游乐园',
+        en: '3D Claymorphism Interactive Toybox',
+        grad: 'linear-gradient(90deg, #FF85B3, #52E5B7, #FFD15C)',
+        desc: '马卡龙多巴胺配色与膨胀感内外双重柔和阴影。包含戳肚子会 Q 弹变形发声的软泥萌宠工坊，以及 15 孔解压硅胶按按乐 (Pop-It)。'
+      },
+      {
+        num: 'STYLE 09',
+        file: '09-retro-terminal.html',
+        title: '1982 复古绿磷/琥珀 CRT 大型机终端',
+        en: '1982 Phosphor CRT Mainframe & Oscilloscope',
+        grad: 'linear-gradient(90deg, #33FF66, #FFB000, #061006)',
+        desc: '纯正单色荧光余晖与阴极射线管暗角。内置辐射风格十六进制内存密码破译游戏，以及可调李萨如（Lissajous）图形的实时示波器。'
+      },
+      {
+        num: 'STYLE 10',
+        file: '10-kinetic-festival.html',
+        title: '动态拉伸字体与酸性电子音乐节',
+        en: 'Kinetic Typography & Acid Rave Festival',
+        grad: 'linear-gradient(90deg, #CCFF00, #7000FF, #111111)',
+        desc: '高对比电光酸性绿与液态铬金属星芒。巨型标题随鼠标轨迹实时产生斜切与字宽扭曲，支持舞台阵容筛选与专属 VIP 电音通票生成。'
       }
-    };
+    ];
 
-    document.getElementById('btn-open-scoring-hub').addEventListener('click', openScoring);
-    document.getElementById('btn-trigger-review').addEventListener('click', openScoring);
+    const container = document.getElementById('cardsContainer');
+
+    function renderCards() {
+      container.innerHTML = '';
+      pages.forEach((p, idx) => {
+        const card = document.createElement('article');
+        card.className = 'style-card';
+        card.innerHTML = `
+          <div>
+            <div class="swatch-strip" style="background: ${p.grad};"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="card-num">${p.num} // ${p.file}</span>
+              <span class="card-num">${p.en}</span>
+            </div>
+            <h2 class="card-title">${p.title}</h2>
+            <p class="card-desc">${p.desc}</p>
+          </div>
+          <div class="card-actions">
+            <div style="display:flex; gap:8px;">
+              <a href="${p.file}" class="btn-link btn-primary">进入页面 →</a>
+              <button class="btn-link" onclick="openPreview('${p.file}', '${p.title}')">👁 页内预览</button>
+            </div>
+            <div class="rate-box">
+              <span>打分:</span>
+              <input type="number" class="rate-input" min="0" max="10" step="0.5" value="10" oninput="recalcTotal()">
+              <span>/10</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openPreview(file, title) {
+      const drawer = document.getElementById('previewDrawer');
+      drawer.classList.add('active');
+      document.getElementById('liveFrame').src = file;
+      document.getElementById('previewTitle').textContent = `LIVE PREVIEW // ${title} (${file})`;
+      document.getElementById('openNewTabLink').href = file;
+      drawer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closePreview() {
+      document.getElementById('previewDrawer').classList.remove('active');
+      document.getElementById('liveFrame').src = '';
+    }
+
+    function recalcTotal() {
+      let sum = 0;
+      document.querySelectorAll('.rate-input').forEach(inp => {
+        const val = Math.min(10, Math.max(0, Number(inp.value) || 0));
+        sum += val;
+      });
+      document.getElementById('totalScoreDisplay').textContent = `${sum.toFixed(1).replace(/\.0$/, '')} / 100`;
+    }
+
+    renderCards();
   </script>
 </body>
 </html>

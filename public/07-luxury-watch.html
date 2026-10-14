@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>07 // VACHERON & CHRONOS — 黑金顶奢陀飞轮高定腕表</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap');
+
+    :root {
+      --obsidian: #070708;
+      --gold: #D4AF37;
+      --gold-light: #F3E5AB;
+      --gold-dim: rgba(212, 175, 55, 0.25);
+      --case-metal: #D4AF37;
+      --dial-color: #0D0F12;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--obsidian);
+      background-image: radial-gradient(circle at 50% 35%, rgba(212, 175, 55, 0.12) 0%, rgba(7, 7, 8, 1) 70%);
+      color: #F4F1EA;
+      font-family: 'Montserrat', 'PingFang SC', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 26px 56px;
+      border-bottom: 1px solid var(--gold-dim);
+    }
+
+    .maison-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      letter-spacing: 6px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+    }
+
+    .lux-btn {
+      background: transparent;
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      padding: 10px 24px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.35s ease;
+    }
+
+    .lux-btn:hover, .lux-btn.active {
+      background: linear-gradient(135deg, var(--gold), #AA7C11);
+      color: #000;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .atelier-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 48px 56px;
+      display: grid;
+      grid-template-columns: 1fr 480px 1fr;
+      gap: 48px;
+      align-items: center;
+      flex: 1;
+    }
+
+    @media (max-width: 1150px) {
+      .atelier-grid { grid-template-columns: 1fr; text-align: center; }
+    }
+
+    .serif-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 54px;
+      font-weight: 400;
+      line-height: 1.08;
+      color: var(--gold-light);
+      margin: 14px 0 22px;
+    }
+
+    .gold-subtitle {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Interactive Mechanical Watch SVG Showcase */
+    .watch-pedestal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .watch-svg {
+      width: 390px;
+      height: 390px;
+      filter: drop-shadow(0 28px 50px rgba(0,0,0,0.85));
+    }
+
+    /* Bespoke Configurator Controls */
+    .config-section {
+      border-left: 1px solid var(--gold-dim);
+      padding-left: 36px;
+    }
+
+    .config-group {
+      margin-bottom: 28px;
+    }
+
+    .config-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .swatch-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metal-option {
+      padding: 10px 16px;
+      border: 1px solid var(--gold-dim);
+      background: rgba(255,255,255,0.02);
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .metal-option.active, .metal-option:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    .price-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      color: var(--gold-light);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="maison-brand">CHRONOS DE GENÈVE // 1755</div>
+    <div style="display:flex; gap:14px;">
+      <a href="index.html" class="lux-btn">← 返回总览</a>
+      <a href="08-clay-playful.html" class="lux-btn">下一风格: 软泥玩具屋 →</a>
+    </div>
+  </header>
+
+  <main class="atelier-grid">
+    <!-- Left Story & Complications -->
+    <section>
+      <span class="gold-subtitle">STYLE 07 // HAUTE HORLOGERIE</span>
+      <h1 class="serif-title">Celestial<br>Tourbillon<br>Calibre 902.</h1>
+      <p style="font-size:14px; line-height:1.9; color:rgba(244,241,234,0.72); margin-bottom:28px;">
+        日内瓦印记手工雕琢机芯，搭载一分钟飞行陀飞轮与高振频黄金摆轮。每一枚齿轮均经镜面抛光与倒角修饰，在深邃黑曜石表盘上折射永恒光影。
+      </p>
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="lux-btn active" id="chronoBtn">⏱ 启动飞返计时码表 (CHRONOGRAPH)</button>
+        <button class="lux-btn" id="skeletonBtn">⚙ 切换镂空机芯透视</button>
+      </div>
+    </section>
+
+    <!-- Center Real-Time Mechanical Watch SVG -->
+    <section class="watch-pedestal">
+      <svg class="watch-svg" viewBox="0 0 400 400">
+        <defs>
+          <linearGradient id="caseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" id="stop1" stop-color="#F3E5AB"/>
+            <stop offset="50%" id="stop2" stop-color="#D4AF37"/>
+            <stop offset="100%" id="stop3" stop-color="#8A6421"/>
+          </linearGradient>
+          <radialGradient id="dialGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" id="dialStop1" stop-color="#1A2230"/>
+            <stop offset="100%" id="dialStop2" stop-color="#08090C"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Leather Strap Top & Bottom -->
+        <rect x="145" y="5" width="110" height="60" rx="8" fill="#161412" stroke="url(#caseGrad)" stroke-width="2"/>
+        <rect x="145" y="335" width="110" height="60" rx="8" fill="#161412" stroke="url(#caseGrad)" stroke-width="2"/>
+
+        <!-- Outer Bezel -->
+        <circle cx="200" cy="200" r="152" fill="url(#caseGrad)" />
+        <circle cx="200" cy="200" r="138" fill="#050505" />
+        <circle cx="200" cy="200" r="134" fill="url(#dialGrad)" stroke="url(#caseGrad)" stroke-width="1.5"/>
+
+        <!-- Exposed Skeleton Gears (Toggled) -->
+        <g id="skeletonGroup" opacity="0.25" style="transition: opacity 0.5s;">
+          <circle cx="200" cy="145" r="42" fill="none" stroke="url(#caseGrad)" stroke-width="1.5" stroke-dasharray="6 4"/>
+          <circle cx="160" cy="215" r="32" fill="none" stroke="url(#caseGrad)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="240" cy="215" r="32" fill="none" stroke="url(#caseGrad)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        </g>
+
+        <!-- Roman & Baton Hour Indices -->
+        <g id="hourMarks" stroke="url(#caseGrad)" stroke-width="2"></g>
+
+        <!-- Brand Inscription -->
+        <text x="200" y="118" text-anchor="middle" fill="#F3E5AB" font-family="Cormorant Garamond" font-size="13" letter-spacing="4">CHRONOS</text>
+        <text x="200" y="132" text-anchor="middle" fill="#D4AF37" font-family="Montserrat" font-size="7" letter-spacing="2">GENÈVE</text>
+
+        <!-- 6 O'Clock Flying Tourbillon Cage -->
+        <g transform="translate(200, 268)">
+          <circle cx="0" cy="0" r="34" fill="#050608" stroke="url(#caseGrad)" stroke-width="1.5"/>
+          <g id="tourbillonCage">
+            <circle cx="0" cy="0" r="26" fill="none" stroke="#D4AF37" stroke-width="1.2" stroke-dasharray="8 6"/>
+            <line x1="-26" y1="0" x2="26" y2="0" stroke="#F3E5AB" stroke-width="1.8"/>
+            <line x1="0" y1="-26" x2="0" y2="26" stroke="#F3E5AB" stroke-width="1.8"/>
+            <circle cx="0" cy="0" r="6" fill="#D4AF37"/>
+          </g>
+        </g>
+
+        <!-- Hour, Minute, Second Hands -->
+        <line id="hourHand" x1="200" y1="200" x2="200" y2="122" stroke="url(#caseGrad)" stroke-width="5" stroke-linecap="round"/>
+        <line id="minHand" x1="200" y1="200" x2="200" y2="88" stroke="#F3E5AB" stroke-width="3.2" stroke-linecap="round"/>
+        <line id="secHand" x1="200" y1="225" x2="200" y2="76" stroke="#D4AF37" stroke-width="1.4"/>
+        <!-- Flyback Chronograph Red/Gold Hand -->
+        <line id="chronoHand" x1="200" y1="220" x2="200" y2="72" stroke="#E63946" stroke-width="1.5"/>
+        <circle cx="200" cy="200" r="6" fill="url(#caseGrad)"/>
+      </svg>
+      <div style="font-size:12px; letter-spacing:3px; color:var(--gold); margin-top:8px;" id="liveWatchTime">GENEVA REAL-TIME SYNC</div>
+    </section>
+
+    <!-- Right Bespoke Configurator -->
+    <section class="config-section">
+      <div class="config-group">
+        <span class="config-label">01 // 表壳贵金属材质 (CASE MATERIAL)</span>
+        <div class="swatch-row">
+          <button class="metal-option active" onclick="setCaseMetal('#F3E5AB','#D4AF37','#8A6421','CHF 148,000', this)">18K 皇室黄金</button>
+          <button class="metal-option" onclick="setCaseMetal('#FFD1BA','#E59872','#9E5836','CHF 156,000', this)">18K 永恒玫瑰金</button>
+          <button class="metal-option" onclick="setCaseMetal('#FFFFFF','#C0C5CE','#65737E','CHF 172,000', this)">950 冰川铂金</button>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <span class="config-label">02 // 珐琅表盘色泽 (GRAND FEU ENAMEL DIAL)</span>
+        <div class="swatch-row">
+          <button class="metal-option active" onclick="setDialColor('#1A2230','#08090C', this)">午夜蓝珐琅</button>
+          <button class="metal-option" onclick="setDialColor('#142E24','#06110C', this)">日内瓦绿</button>
+          <button class="metal-option" onclick="setDialColor('#381418','#120507', this)">勃艮第酒红</button>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--gold-dim); padding-top: 20px;">
+        <span class="config-label">BESPOKE ALLOCATION VALUATION</span>
+        <div class="price-tag" id="priceDisplay">CHF 148,000</div>
+        <button class="lux-btn" style="width:100%;" id="reserveBtn">✦ 预约日内瓦私人沙龙品鉴</button>
+        <p id="reserveMsg" style="font-size:12px; color:var(--gold-light); margin-top:12px; display:none;">
+          ✓ 尊享编号 #2026-88 私人品鉴函已生成，礼宾官将为您保留此高定配置。
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Generate 60 minute/hour ticks
+    const marksGroup = document.getElementById('hourMarks');
+    for (let i = 0; i < 60; i++) {
+      const angle = (i * 6) * Math.PI / 180;
+      const isHour = i % 5 === 0;
+      const r1 = isHour ? 116 : 124;
+      const r2 = 130;
+      const x1 = 200 + Math.sin(angle) * r1;
+      const y1 = 200 - Math.cos(angle) * r1;
+      const x2 = 200 + Math.sin(angle) * r2;
+      const y2 = 200 - Math.cos(angle) * r2;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      line.setAttribute('stroke-width', isHour ? '2.5' : '1');
+      marksGroup.appendChild(line);
+    }
+
+    let tourbillonDeg = 0;
+    let chronoDeg = 0;
+    let chronoActive = true;
+
+    function animateWatch() {
+      const now = new Date();
+      const ms = now.getMilliseconds();
+      const sec = now.getSeconds() + ms / 1000;
+      const min = now.getMinutes() + sec / 60;
+      const hr = (now.getHours() % 12) + min / 60;
+
+      document.getElementById('hourHand').setAttribute('transform', `rotate(${hr * 30} 200 200)`);
+      document.getElementById('minHand').setAttribute('transform', `rotate(${min * 6} 200 200)`);
+      document.getElementById('secHand').setAttribute('transform', `rotate(${sec * 6} 200 200)`);
+
+      // High-beat Tourbillon rotation
+      tourbillonDeg = (tourbillonDeg + 1.8) % 360;
+      document.getElementById('tourbillonCage').setAttribute('transform', `rotate(${tourbillonDeg})`);
+
+      if (chronoActive) {
+        chronoDeg = (chronoDeg + 0.6) % 360;
+        document.getElementById('chronoHand').setAttribute('transform', `rotate(${chronoDeg} 200 200)`);
+      }
+
+      document.getElementById('liveWatchTime').textContent =
+        `GENEVA CALIBRE 902 // ${now.toTimeString().split(' ')[0]} // 28,800 VPH`;
+
+      requestAnimationFrame(animateWatch);
+    }
+
+    document.getElementById('chronoBtn').onclick = function() {
+      chronoActive = !chronoActive;
+      this.classList.toggle('active');
+      this.textContent = chronoActive ? '⏱ 暂停并飞返归零 (FLYBACK)' : '⏱ 启动飞返计时码表 (CHRONOGRAPH)';
+      if (!chronoActive) {
+        chronoDeg = 0;
+        document.getElementById('chronoHand').setAttribute('transform', `rotate(0 200 200)`);
+      }
+    };
+
+    let isSkeleton = false;
+    document.getElementById('skeletonBtn').onclick = function() {
+      isSkeleton = !isSkeleton;
+      this.classList.toggle('active');
+      document.getElementById('skeletonGroup').style.opacity = isSkeleton ? '0.95' : '0.25';
+    };
+
+    function setCaseMetal(c1, c2, c3, price, btn) {
+      document.getElementById('stop1').setAttribute('stop-color', c1);
+      document.getElementById('stop2').setAttribute('stop-color', c2);
+      document.getElementById('stop3').setAttribute('stop-color', c3);
+      document.getElementById('priceDisplay').textContent = price;
+      btn.parentElement.querySelectorAll('.metal-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setDialColor(d1, d2, btn) {
+      document.getElementById('dialStop1').setAttribute('stop-color', d1);
+      document.getElementById('dialStop2').setAttribute('stop-color', d2);
+      btn.parentElement.querySelectorAll('.metal-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    document.getElementById('reserveBtn').onclick = () => {
+      document.getElementById('reserveMsg').style.display = 'block';
+    };
+
+    animateWatch();
+  </script>
+</body>
+</html>

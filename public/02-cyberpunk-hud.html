@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02 // AEGIS-IX — 赛博朋克深空防御战术终端</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --bg-void: #05070B;
+      --panel-bg: rgba(8, 17, 28, 0.82);
+      --cyan: #00F0FF;
+      --cyan-dim: rgba(0, 240, 255, 0.22);
+      --magenta: #FF0055;
+      --amber: #FFB800;
+      --green: #00FF66;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--cyan);
+      font-family: 'Share Tech Mono', 'Consolas', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 70%),
+        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+      background-size: 100% 100%, 40px 40px, 40px 40px;
+    }
+
+    /* CRT Scanlines Overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.22) 0px,
+        rgba(0, 0, 0, 0.22) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Top HUD Header */
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--cyan);
+      background: rgba(5, 12, 20, 0.9);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hud-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-shadow: 0 0 10px var(--cyan);
+    }
+
+    .threat-badge {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--cyan);
+      padding: 4px 12px;
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .hud-nav {
+      display: flex;
+      gap: 12px;
+    }
+
+    .cyber-btn {
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 8px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cyber-btn:hover {
+      background: var(--cyan);
+      color: #000;
+      box-shadow: 0 0 18px var(--cyan);
+    }
+
+    .cyber-btn.danger {
+      border-color: var(--magenta);
+      color: var(--magenta);
+      background: rgba(255, 0, 85, 0.1);
+    }
+
+    .cyber-btn.danger:hover {
+      background: var(--magenta);
+      color: #fff;
+      box-shadow: 0 0 20px var(--magenta);
+    }
+
+    /* Main Tactical Grid */
+    .hud-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr 360px;
+      gap: 20px;
+      padding: 20px 28px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1200px) {
+      .hud-grid { grid-template-columns: 1fr; }
+    }
+
+    .hud-panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--cyan-dim);
+      padding: 20px;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05);
+    }
+
+    .hud-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--cyan-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Left Telemetry */
+    .metric-row {
+      margin-bottom: 16px;
+    }
+
+    .metric-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .bar-track {
+      height: 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--cyan-dim);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), #0088ff);
+      box-shadow: 0 0 10px var(--cyan);
+      transition: width 0.3s ease;
+    }
+
+    /* Center Radar Canvas */
+    .radar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas#radarCanvas {
+      border: 1px solid var(--cyan-dim);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 40, 65, 0.5) 0%, rgba(3, 8, 15, 0.95) 75%);
+      cursor: crosshair;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+      max-width: 100%;
+    }
+
+    .radar-hud-footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--cyan-dim);
+      font-size: 13px;
+    }
+
+    /* Right Terminal */
+    .terminal-log {
+      height: 300px;
+      background: rgba(2, 5, 9, 0.9);
+      border: 1px solid var(--cyan-dim);
+      padding: 12px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .log-entry { margin-bottom: 6px; }
+    .log-warn { color: var(--amber); }
+    .log-crit { color: var(--magenta); text-shadow: 0 0 6px var(--magenta); }
+    .log-ok { color: var(--green); }
+
+    .cmd-input-wrap {
+      display: flex;
+      border: 1px solid var(--cyan);
+      background: #02060D;
+    }
+
+    .cmd-prefix {
+      padding: 10px;
+      color: var(--magenta);
+      font-weight: bold;
+    }
+
+    .cmd-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--cyan);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      padding-right: 10px;
+    }
+
+    /* Red Alert Mode */
+    body.red-alert {
+      --cyan: #FF0055;
+      --cyan-dim: rgba(255, 0, 85, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hud-header">
+    <div class="hud-title">
+      <span>[STYLE 02] AEGIS-IX ORBITAL DEFENSE HUD</span>
+      <span class="threat-badge" id="defconBadge">DEFCON 4 // NOMINAL</span>
+    </div>
+    <div class="hud-nav">
+      <button class="cyber-btn danger" id="alertToggleBtn">⚠ 切换红色警戒 (RED ALERT)</button>
+      <a href="index.html" class="cyber-btn">← 返回总控中心</a>
+      <a href="03-swiss-editorial.html" class="cyber-btn">下一风格: 瑞士国际主义 →</a>
+    </div>
+  </header>
+
+  <main class="hud-grid">
+    <!-- Left Column: Telemetry & Subsystem Controls -->
+    <section class="hud-panel">
+      <div class="panel-title">
+        <span>REACTOR & SHIELD TELEMETRY</span>
+        <span>SYS.01</span>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric-head"><span>聚变核心输出 (FUSION CORE)</span><span id="coreVal">94.2%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="coreBar" style="width: 94%;"></div></div>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric-head"><span>量子偏导护盾 (QUANTUM SHIELD)</span><span id="shieldVal">88.0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="shieldBar" style="width: 88%;"></div></div>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric-head"><span>轨道电磁炮充能 (RAILGUN CAP)</span><span id="weaponVal">100%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="weaponBar" style="width: 100%; background: var(--green);"></div></div>
+      </div>
+
+      <div class="panel-title" style="margin-top: 28px;">
+        <span>ORBITAL INTERCEPT STATS</span>
+        <span>LIVE</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        <div style="border: 1px solid var(--cyan-dim); padding: 12px;">
+          <div style="font-size:11px; opacity:0.7;">已锁定目标 (LOCKED)</div>
+          <div style="font-size:28px; font-family:'Orbitron';" id="lockedCount">0</div>
+        </div>
+        <div style="border: 1px solid var(--cyan-dim); padding: 12px;">
+          <div style="font-size:11px; opacity:0.7;">已摧毁威胁 (INTERCEPTED)</div>
+          <div style="font-size:28px; font-family:'Orbitron'; color: var(--green);" id="killCount">14</div>
+        </div>
+      </div>
+
+      <button class="cyber-btn" style="width:100%; justify-content:center; margin-bottom:10px;" id="spawnWaveBtn">
+        + 生成高超音速入侵目标群
+      </button>
+      <button class="cyber-btn danger" style="width:100%; justify-content:center;" id="empBlastBtn">
+        ⚡ 释放全频段 EMP 脉冲清屏
+      </button>
+    </section>
+
+    <!-- Center Column: Interactive Radar -->
+    <section class="hud-panel radar-container">
+      <div class="panel-title" style="width: 100%;">
+        <span>ACTIVE PHASED-ARRAY RADAR // 点击雷达目标发射电磁拦截弹</span>
+        <span id="coordsText">AZ: 142.8° EL: +18.4°</span>
+      </div>
+
+      <canvas id="radarCanvas" width="440" height="440"></canvas>
+
+      <div class="radar-hud-footer">
+        <span>SCAN FREQ: 42.8 GHz</span>
+        <span>CLICK TARGET TO ENGAGE</span>
+        <span>SECTOR: LAGRANGE-L2</span>
+      </div>
+    </section>
+
+    <!-- Right Column: Tactical Command Shell -->
+    <section class="hud-panel">
+      <div class="panel-title">
+        <span>NEURAL TACTICAL SHELL</span>
+        <span>TTY-09</span>
+      </div>
+
+      <div class="terminal-log" id="termLog">
+        <div class="log-entry log-ok">[08:06:01] AEGIS-IX 轨道防御矩阵已上线。</div>
+        <div class="log-entry">[08:06:02] 相控阵雷达正在扫描 L2 拉格朗日扇区...</div>
+        <div class="log-entry log-warn">[08:06:04] 侦测到未授权深空跃迁信号，请点击雷达亮点进行精确拦截！</div>
+        <div class="log-entry">[TIP] 可在下方输入 help / scan / emp / status 指令。</div>
+      </div>
+
+      <form id="cmdForm" class="cmd-input-wrap">
+        <span class="cmd-prefix">ROOT@AEGIS:~#</span>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="输入战术指令 (如 help, emp)..." autocomplete="off">
+      </form>
+
+      <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="cyber-btn" style="font-size:12px; padding:5px 10px;" onclick="runCommand('scan')">SCAN</button>
+        <button class="cyber-btn" style="font-size:12px; padding:5px 10px;" onclick="runCommand('emp')">EMP</button>
+        <button class="cyber-btn" style="font-size:12px; padding:5px 10px;" onclick="runCommand('status')">STATUS</button>
+        <button class="cyber-btn" style="font-size:12px; padding:5px 10px;" onclick="runCommand('clear')">CLEAR</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const radius = 200;
+
+    let sweepAngle = 0;
+    let kills = 14;
+    let targets = [];
+    let explosions = [];
+
+    function spawnTarget() {
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 60 + Math.random() * (radius - 30);
+      targets.push({
+        x: cx + Math.cos(ang) * dist,
+        y: cy + Math.sin(ang) * dist,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        code: 'BOGEY-' + Math.floor(100 + Math.random() * 899)
+      });
+      updateCounter();
+    }
+
+    for (let i = 0; i < 6; i++) spawnTarget();
+
+    function updateCounter() {
+      document.getElementById('lockedCount').textContent = targets.length;
+      document.getElementById('killCount').textContent = kills;
+    }
+
+    function addLog(msg, cls = '') {
+      const term = document.getElementById('termLog');
+      const div = document.createElement('div');
+      div.className = `log-entry ${cls}`;
+      const time = new Date().toTimeString().split(' ')[0];
+      div.textContent = `[${time}] ${msg}`;
+      term.appendChild(div);
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function drawRadar() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const isAlert = document.body.classList.contains('red-alert');
+      const mainColor = isAlert ? '#FF0055' : '#00F0FF';
+
+      // Concentric rings
+      ctx.strokeStyle = isAlert ? 'rgba(255,0,85,0.25)' : 'rgba(0,240,255,0.22)';
+      ctx.lineWidth = 1;
+      [50, 100, 150, 200].forEach(r => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Crosshairs
+      ctx.beginPath();
+      ctx.moveTo(cx - radius, cy); ctx.lineTo(cx + radius, cy);
+      ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
+      ctx.stroke();
+
+      // Rotating Sweep Cone
+      sweepAngle += 0.03;
+      const grad = ctx.createConicGradient(sweepAngle, cx, cy);
+      grad.addColorStop(0, isAlert ? 'rgba(255, 0, 85, 0.45)' : 'rgba(0, 240, 255, 0.4)');
+      grad.addColorStop(0.18, 'rgba(0, 0, 0, 0)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Targets
+      targets.forEach(t => {
+        t.x += t.vx;
+        t.y += t.vy;
+        const d = Math.hypot(t.x - cx, t.y - cy);
+        if (d > radius - 12) {
+          t.vx *= -1;
+          t.vy *= -1;
+        }
+
+        // Target Reticle
+        ctx.strokeStyle = '#FF0055';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(t.x - 7, t.y - 7, 14, 14);
+
+        ctx.fillStyle = '#FFB800';
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = mainColor;
+        ctx.font = '10px Share Tech Mono';
+        ctx.fillText(t.code, t.x + 10, t.y + 3);
+      });
+
+      // Draw Explosions
+      for (let i = explosions.length - 1; i >= 0; i--) {
+        const ex = explosions[i];
+        ex.r += 1.8;
+        ex.alpha -= 0.04;
+        ctx.strokeStyle = `rgba(0, 255, 102, ${ex.alpha})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ex.x, ex.y, ex.r, 0, Math.PI * 2);
+        ctx.stroke();
+        if (ex.alpha <= 0) explosions.splice(i, 1);
+      }
+
+      requestAnimationFrame(drawRadar);
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left - cx).toFixed(1);
+      const y = (cy - (e.clientY - rect.top)).toFixed(1);
+      document.getElementById('coordsText').textContent = `VEC X: ${x} // Y: ${y}`;
+    });
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      let hit = false;
+      for (let i = targets.length - 1; i >= 0; i--) {
+        const t = targets[i];
+        if (Math.hypot(mx - t.x, my - t.y) < 22) {
+          explosions.push({ x: t.x, y: t.y, r: 4, alpha: 1 });
+          addLog(`电磁轨道炮命中目标 [${t.code}]，目标已解体！`, 'log-ok');
+          targets.splice(i, 1);
+          kills++;
+          hit = true;
+          updateCounter();
+          break;
+        }
+      }
+      if (!hit) {
+        explosions.push({ x: mx, y: my, r: 2, alpha: 0.6 });
+        addLog(`坐标 (${Math.round(mx)}, ${Math.round(my)}) 未侦测到实体目标。`, 'log-warn');
+      }
+    });
+
+    document.getElementById('spawnWaveBtn').onclick = () => {
+      for (let i = 0; i < 4; i++) spawnTarget();
+      addLog('警告：侦测到 4 个新的高超音速轨道入侵点！', 'log-crit');
+    };
+
+    document.getElementById('empBlastBtn').onclick = () => {
+      runCommand('emp');
+    };
+
+    document.getElementById('alertToggleBtn').onclick = () => {
+      document.body.classList.toggle('red-alert');
+      const isRed = document.body.classList.contains('red-alert');
+      document.getElementById('defconBadge').textContent = isRed ? 'DEFCON 1 // MAXIMUM THREAT' : 'DEFCON 4 // NOMINAL';
+      addLog(isRed ? '全舰进入一级红色战斗警报状态！' : '警报解除，恢复常规巡航监控。', isRed ? 'log-crit' : 'log-ok');
+    };
+
+    function runCommand(raw) {
+      const cmd = raw.trim().toLowerCase();
+      if (!cmd) return;
+      addLog(`> ${cmd}`);
+      if (cmd === 'help') {
+        addLog('可用指令: scan (扫描新目标), emp (全屏电磁脉冲清除), status (反应堆报告), clear (清空终端)', 'log-ok');
+      } else if (cmd === 'scan') {
+        spawnTarget(); spawnTarget();
+        addLog('深空扫描完成：捕获 2 个潜行目标信号。', 'log-warn');
+      } else if (cmd === 'emp') {
+        const count = targets.length;
+        targets.forEach(t => explosions.push({ x: t.x, y: t.y, r: 6, alpha: 1 }));
+        kills += count;
+        targets = [];
+        updateCounter();
+        addLog(`EMP 全频段冲击波释放完毕，瞬间歼灭 ${count} 个敌方单位！`, 'log-ok');
+      } else if (cmd === 'status') {
+        addLog('聚变堆核心稳定度 94.2%，护盾谐振频率正常。', 'log-ok');
+      } else if (cmd === 'clear') {
+        document.getElementById('termLog').innerHTML = '';
+      } else {
+        addLog(`未知战术指令 "${cmd}"，输入 help 查看帮助。`, 'log-crit');
+      }
+    }
+
+    document.getElementById('cmdForm').onsubmit = (e) => {
+      e.preventDefault();
+      const input = document.getElementById('cmdInput');
+      runCommand(input.value);
+      input.value = '';
+    };
+
+    // Telemetry live fluctuation
+    setInterval(() => {
+      const core = (91 + Math.random() * 7).toFixed(1);
+      document.getElementById('coreVal').textContent = core + '%';
+      document.getElementById('coreBar').style.width = core + '%';
+    }, 2000);
+
+    drawRadar();
+  </script>
+</body>
+</html>

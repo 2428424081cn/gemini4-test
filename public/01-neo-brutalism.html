@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01 // BRUTAL.SYNTH — 新粗野主义声音与视觉实验室</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=JetBrains+Mono:wght@500;800&display=swap');
+
+    :root {
+      --bg: #FFFDF7;
+      --yellow: #FFE600;
+      --pink: #FF3366;
+      --blue: #2B59FF;
+      --green: #00E575;
+      --purple: #A855F7;
+      --black: #111111;
+      --border: 4px solid #111111;
+      --shadow: 8px 8px 0px #111111;
+      --shadow-sm: 4px 4px 0px #111111;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(#111 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      color: var(--black);
+      font-family: 'Space Grotesk', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Marquee */
+    .marquee-bar {
+      background: var(--yellow);
+      border-bottom: var(--border);
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 18s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Navigation */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      background: #fff;
+      border-bottom: var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .badge-num {
+      background: var(--pink);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      padding: 6px 12px;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      font-size: 18px;
+      transform: rotate(-3deg);
+    }
+
+    .logo-text {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .brutal-btn {
+      background: #fff;
+      color: var(--black);
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      padding: 10px 20px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brutal-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111;
+    }
+
+    .brutal-btn:active, .brutal-btn.active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0px #111;
+    }
+
+    .btn-pink { background: var(--pink); color: #fff; }
+    .btn-green { background: var(--green); }
+    .btn-yellow { background: var(--yellow); }
+    .btn-blue { background: var(--blue); color: #fff; }
+
+    /* Main Grid */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 28px;
+      padding: 32px;
+      max-width: 1480px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .workspace { grid-template-columns: 1fr; }
+    }
+
+    .brutal-card {
+      background: #fff;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-tag {
+      background: var(--black);
+      color: var(--yellow);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 4px 10px;
+      font-weight: 800;
+    }
+
+    /* 16-Step Sequencer */
+    .sequencer-controls {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      background: #F4F1EA;
+      padding: 16px;
+      border: var(--border);
+    }
+
+    .bpm-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      margin-left: auto;
+    }
+
+    input[type="range"].brutal-slider {
+      -webkit-appearance: none;
+      width: 130px;
+      height: 16px;
+      background: #fff;
+      border: 3px solid #111;
+      outline: none;
+    }
+
+    input[type="range"].brutal-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 28px;
+      background: var(--pink);
+      border: 3px solid #111;
+      cursor: pointer;
+    }
+
+    .track-row {
+      display: grid;
+      grid-template-columns: 100px repeat(8, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .track-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 10px 8px;
+      border: 3px solid #111;
+      text-align: center;
+      box-shadow: 3px 3px 0 #111;
+    }
+
+    .step-btn {
+      height: 52px;
+      border: 3px solid #111;
+      background: #fff;
+      cursor: pointer;
+      transition: transform 0.06s;
+      position: relative;
+      box-shadow: 3px 3px 0 #111;
+    }
+
+    .step-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .step-btn.on-kick { background: var(--pink); }
+    .step-btn.on-snare { background: var(--yellow); }
+    .step-btn.on-hihat { background: var(--green); }
+    .step-btn.on-bass { background: var(--blue); }
+
+    .step-btn.playing {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0 #111;
+      outline: 4px solid var(--black);
+      filter: brightness(1.15);
+    }
+
+    /* Sound Pads */
+    .pads-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .sfx-pad {
+      height: 85px;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.08s;
+    }
+
+    .sfx-pad:active, .sfx-pad.triggered {
+      transform: translate(4px, 4px);
+      box-shadow: 0px 0px 0 #111;
+    }
+
+    /* Sticker Poster Canvas */
+    .poster-stage {
+      height: 360px;
+      background: var(--blue);
+      border: var(--border);
+      position: relative;
+      overflow: hidden;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.15) 1px, transparent 1px);
+      background-size: 32px 32px;
+      margin-bottom: 18px;
+    }
+
+    .draggable-sticker {
+      position: absolute;
+      cursor: grab;
+      padding: 10px 18px;
+      border: var(--border);
+      box-shadow: var(--shadow-sm);
+      font-weight: 900;
+      font-size: 20px;
+      user-select: none;
+      transition: box-shadow 0.1s;
+    }
+
+    .draggable-sticker:active {
+      cursor: grabbing;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.85);
+      z-index: 50;
+    }
+
+    /* Visualizer bar */
+    .viz-bar-wrap {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 6px;
+      height: 70px;
+      align-items: end;
+      padding: 10px;
+      background: var(--black);
+      border: var(--border);
+      margin-top: 20px;
+    }
+
+    .viz-col {
+      background: var(--green);
+      height: 15%;
+      width: 100%;
+      transition: height 0.08s ease;
+      border: 1px solid #111;
+    }
+
+    .theme-switcher {
+      display: flex;
+      gap: 8px;
+    }
+
+    .color-dot {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #111;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 #111;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="marquee-bar">
+    <div class="marquee-track">
+      ★ STYLE 01: NEO-BRUTALISM // 4PX SOLID BORDERS // RAW WEB AUDIO SYNTHESIZER // DRAG & DROP STICKER STUDIO // NO BLUR ALLOWED // 100% INTERACTIVE ★ STYLE 01: NEO-BRUTALISM // 4PX SOLID BORDERS // RAW WEB AUDIO SYNTHESIZER // DRAG & DROP STICKER STUDIO // NO BLUR ALLOWED // 100% INTERACTIVE
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <span class="badge-num">STYLE #01</span>
+      <div class="logo-text">BRUTAL.SYNTH_OS</div>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="brutal-btn btn-yellow">← 返回总控导航台</a>
+      <a href="02-cyberpunk-hud.html" class="brutal-btn btn-pink">下一风格: 赛博终端 →</a>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- Left: Web Audio Drum Machine -->
+    <section class="brutal-card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🎹 8-BIT 粗野主义节奏合成器</span>
+        </div>
+        <span class="pill-tag" id="audioStatus">WEB AUDIO READY</span>
+      </div>
+
+      <div class="sequencer-controls">
+        <button class="brutal-btn btn-green" id="playBtn">▶ 启动律动 (PLAY)</button>
+        <button class="brutal-btn" id="randomBtn">🎲 随机节拍</button>
+        <button class="brutal-btn" id="clearBtn">✖ 清空</button>
+        <div class="bpm-box">
+          <span>BPM: <strong id="bpmVal">124</strong></span>
+          <input type="range" min="70" max="180" value="124" class="brutal-slider" id="bpmSlider">
+        </div>
+      </div>
+
+      <div id="sequencerGrid">
+        <!-- Generated by JS -->
+      </div>
+
+      <div class="viz-bar-wrap" id="vizWrap">
+        <div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div>
+        <div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div>
+        <div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div>
+        <div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div><div class="viz-col"></div>
+      </div>
+
+      <div class="pads-grid">
+        <div class="sfx-pad" style="background: var(--yellow);" data-freq="520" data-type="sawtooth">
+          <span>[Q] LASER</span>
+          <small>520Hz SAW</small>
+        </div>
+        <div class="sfx-pad" style="background: var(--pink); color:#fff;" data-freq="140" data-type="square">
+          <span>[W] SUB DROP</span>
+          <small>140Hz SQR</small>
+        </div>
+        <div class="sfx-pad" style="background: var(--green);" data-freq="880" data-type="triangle">
+          <span>[E] COIN UP</span>
+          <small>880Hz TRI</small>
+        </div>
+        <div class="sfx-pad" style="background: #A855F7; color:#fff;" data-freq="310" data-type="sawtooth">
+          <span>[R] ACID HIT</span>
+          <small>310Hz ACID</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Interactive Brutal Poster Lab -->
+    <section class="brutal-card" style="background: var(--yellow);">
+      <div class="card-header">
+        <div class="card-title">🎨 街头贴纸海报实验室</div>
+        <div class="theme-switcher">
+          <div class="color-dot" style="background:#2B59FF" onclick="setStageBg('#2B59FF')"></div>
+          <div class="color-dot" style="background:#111111" onclick="setStageBg('#111111')"></div>
+          <div class="color-dot" style="background:#FF3366" onclick="setStageBg('#FF3366')"></div>
+          <div class="color-dot" style="background:#FFFDF7" onclick="setStageBg('#FFFDF7')"></div>
+        </div>
+      </div>
+
+      <p style="font-weight:700; margin-bottom:14px;">
+        直接用鼠标拖拽下方贴纸自由排版，或点击按钮生成新的粗野主义宣言贴纸：
+      </p>
+
+      <div class="poster-stage" id="posterStage">
+        <div class="draggable-sticker" style="top: 28px; left: 26px; background: var(--yellow); transform: rotate(-4deg);">
+          DESIGN IS NOT NEUTRAL
+        </div>
+        <div class="draggable-sticker" style="top: 115px; left: 80px; background: var(--pink); color: #fff; transform: rotate(3deg); font-size: 28px;">
+          RAW HTML ENERGY ⚡
+        </div>
+        <div class="draggable-sticker" style="top: 210px; left: 40px; background: var(--green); transform: rotate(-2deg);">
+          NO SOFT SHADOWS
+        </div>
+        <div class="draggable-sticker" style="top: 245px; left: 260px; background: #fff; border-radius: 50px; transform: rotate(8deg);">
+          ★ 2026 EDITION
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="customStickerInput" placeholder="输入自定义贴纸文字..." style="flex:1; padding: 12px; border: var(--border); font-family: inherit; font-weight: 800; font-size: 15px;">
+        <button class="brutal-btn btn-pink" id="addStickerBtn">+ 贴上画布</button>
+        <button class="brutal-btn" id="shakeStageBtn">💥 震动重排</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Web Audio API Synthesizer ---
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    const tracks = [
+      { id: 'kick', name: 'KICK 鼓', cls: 'on-kick', pattern: [1, 0, 0, 0, 1, 0, 1, 0] },
+      { id: 'snare', name: 'SNARE 军', cls: 'on-snare', pattern: [0, 0, 1, 0, 0, 0, 1, 0] },
+      { id: 'hihat', name: 'HI-HAT 镲', cls: 'on-hihat', pattern: [1, 1, 1, 1, 1, 1, 1, 1] },
+      { id: 'bass', name: 'ACID 贝斯', cls: 'on-bass', pattern: [1, 0, 0, 1, 0, 1, 0, 0] }
+    ];
+
+    const gridEl = document.getElementById('sequencerGrid');
+    const vizCols = document.querySelectorAll('.viz-col');
+
+    function renderSequencer() {
+      gridEl.innerHTML = '';
+      tracks.forEach((t, tIdx) => {
+        const row = document.createElement('div');
+        row.className = 'track-row';
+        const label = document.createElement('div');
+        label.className = `track-label ${t.cls}`;
+        label.textContent = t.name;
+        row.appendChild(label);
+
+        t.pattern.forEach((val, sIdx) => {
+          const btn = document.createElement('button');
+          btn.className = `step-btn ${val ? t.cls : ''}`;
+          btn.dataset.track = tIdx;
+          btn.dataset.step = sIdx;
+          btn.onclick = () => {
+            initAudio();
+            tracks[tIdx].pattern[sIdx] = tracks[tIdx].pattern[sIdx] ? 0 : 1;
+            btn.classList.toggle(t.cls);
+            playSound(t.id, sIdx);
+          };
+          row.appendChild(btn);
+        });
+        gridEl.appendChild(row);
+      });
+    }
+
+    function playSound(type, stepIndex = 0) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'kick') {
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.25);
+        gain.gain.setValueAtTime(0.9, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'snare') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.15);
+        gain.gain.setValueAtTime(0.6, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } else if (type === 'hihat') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(1200 + (stepIndex % 2) * 400, now);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+        osc.start(now);
+        osc.stop(now + 0.06);
+      } else if (type === 'bass') {
+        const notes = [110, 130.8, 146.8, 164.8, 98, 110, 130.8, 196];
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(notes[stepIndex % notes.length], now);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+      pulseVisualizer();
+    }
+
+    function pulseVisualizer() {
+      const colors = ['#FFE600', '#FF3366', '#00E575', '#2B59FF'];
+      vizCols.forEach(col => {
+        const h = Math.floor(Math.random() * 85) + 15;
+        col.style.height = h + '%';
+        col.style.background = colors[Math.floor(Math.random() * colors.length)];
+      });
+    }
+
+    let isPlaying = false;
+    let currentStep = 0;
+    let bpm = 124;
+    let timerId = null;
+
+    function stepLoop() {
+      document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('playing'));
+      document.querySelectorAll(`.step-btn[data-step="${currentStep}"]`).forEach(b => b.classList.add('playing'));
+
+      tracks.forEach(t => {
+        if (t.pattern[currentStep]) playSound(t.id, currentStep);
+      });
+
+      currentStep = (currentStep + 1) % 8;
+      const interval = (60 / bpm / 2) * 1000;
+      timerId = setTimeout(stepLoop, interval);
+    }
+
+    const playBtn = document.getElementById('playBtn');
+    playBtn.onclick = () => {
+      initAudio();
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        playBtn.textContent = '⏸ 停止律动 (STOP)';
+        playBtn.classList.replace('btn-green', 'btn-pink');
+        stepLoop();
+      } else {
+        playBtn.textContent = '▶ 启动律动 (PLAY)';
+        playBtn.classList.replace('btn-pink', 'btn-green');
+        clearTimeout(timerId);
+        document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('playing'));
+      }
+    };
+
+    document.getElementById('randomBtn').onclick = () => {
+      initAudio();
+      tracks.forEach(t => {
+        t.pattern = t.pattern.map(() => Math.random() > 0.5 ? 1 : 0);
+      });
+      renderSequencer();
+      playSound('bass', 3);
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      tracks.forEach(t => t.pattern.fill(0));
+      renderSequencer();
+    };
+
+    document.getElementById('bpmSlider').oninput = (e) => {
+      bpm = Number(e.target.value);
+      document.getElementById('bpmVal').textContent = bpm;
+    };
+
+    // SFX Pads
+    document.querySelectorAll('.sfx-pad').forEach(pad => {
+      pad.onclick = () => {
+        initAudio();
+        const freq = Number(pad.dataset.freq);
+        const type = pad.dataset.type;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.8, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.4, now + 0.3);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+        pulseVisualizer();
+      };
+    });
+
+    // --- Draggable Stickers ---
+    const posterStage = document.getElementById('posterStage');
+    let activeSticker = null;
+    let offsetX = 0, offsetY = 0;
+
+    function bindStickerDrag(el) {
+      el.addEventListener('mousedown', (e) => {
+        activeSticker = el;
+        const rect = el.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      });
+    }
+
+    document.querySelectorAll('.draggable-sticker').forEach(bindStickerDrag);
+
+    window.addEventListener('mousemove', (e) => {
+      if (!activeSticker) return;
+      const stageRect = posterStage.getBoundingClientRect();
+      let x = e.clientX - stageRect.left - offsetX;
+      let y = e.clientY - stageRect.top - offsetY;
+      activeSticker.style.left = `${x}px`;
+      activeSticker.style.top = `${y}px`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      activeSticker = null;
+    });
+
+    document.getElementById('addStickerBtn').onclick = () => {
+      const input = document.getElementById('customStickerInput');
+      const text = input.value.trim() || 'BRUTAL WAVE // ' + Math.floor(Math.random() * 99);
+      const colors = ['#FFE600', '#FF3366', '#00E575', '#FFFFFF', '#A855F7'];
+      const bg = colors[Math.floor(Math.random() * colors.length)];
+      const div = document.createElement('div');
+      div.className = 'draggable-sticker';
+      div.textContent = text;
+      div.style.background = bg;
+      div.style.color = (bg === '#FF3366' || bg === '#A855F7') ? '#fff' : '#111';
+      div.style.left = Math.floor(Math.random() * 180 + 20) + 'px';
+      div.style.top = Math.floor(Math.random() * 220 + 20) + 'px';
+      div.style.transform = `rotate(${Math.floor(Math.random() * 16 - 8)}deg)`;
+      posterStage.appendChild(div);
+      bindStickerDrag(div);
+      input.value = '';
+    };
+
+    document.getElementById('shakeStageBtn').onclick = () => {
+      document.querySelectorAll('.draggable-sticker').forEach(el => {
+        el.style.left = Math.floor(Math.random() * 220 + 15) + 'px';
+        el.style.top = Math.floor(Math.random() * 240 + 15) + 'px';
+        el.style.transform = `rotate(${Math.floor(Math.random() * 24 - 12)}deg)`;
+      });
+    };
+
+    function setStageBg(color) {
+      posterStage.style.backgroundColor = color;
+    }
+
+    renderSequencer();
+  </script>
+</body>
+</html>

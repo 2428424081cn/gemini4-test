@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>03 // NEUE GRAFIK — 瑞士国际主义排版与建筑宣言</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+    :root {
+      --paper: #F4F1EA;
+      --ink: #121212;
+      --swiss-red: #E62E25;
+      --rule: 1px solid #121212;
+    }
+
+    body.dark-ink {
+      --paper: #121212;
+      --ink: #F4F1EA;
+      --rule: 1px solid rgba(244, 241, 234, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: 'Inter', 'Helvetica Neue', 'PingFang SC', sans-serif;
+      transition: background-color 0.25s, color 0.25s;
+      min-height: 100vh;
+    }
+
+    /* Exposed Mathematical Grid Overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .grid-overlay.visible {
+      opacity: 1;
+    }
+
+    .grid-col-guide {
+      border-left: 1px dashed rgba(230, 46, 37, 0.45);
+      border-right: 1px dashed rgba(230, 46, 37, 0.45);
+      height: 100%;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      border-left: var(--rule);
+      border-right: var(--rule);
+    }
+
+    /* Top Editorial Masthead */
+    .masthead {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: var(--rule);
+      font-size: 13px;
+    }
+
+    .mast-cell {
+      padding: 16px 20px;
+      border-right: var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mast-cell:last-child { border-right: none; }
+
+    .swiss-btn {
+      background: transparent;
+      color: var(--ink);
+      border: var(--rule);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .swiss-btn:hover, .swiss-btn.active {
+      background: var(--swiss-red);
+      color: #fff;
+      border-color: var(--swiss-red);
+    }
+
+    /* Hero Typographic Section */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      border-bottom: var(--rule);
+    }
+
+    .hero-title-block {
+      grid-column: span 8;
+      padding: 48px 32px;
+      border-right: var(--rule);
+    }
+
+    .issue-tag {
+      color: var(--swiss-red);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    h1.giant-type {
+      font-size: clamp(52px, 7.5vw, 112px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero-meta-block {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px;
+    }
+
+    .red-circle {
+      width: 96px;
+      height: 96px;
+      background: var(--swiss-red);
+      border-radius: 50%;
+    }
+
+    .lead-paragraph {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    /* Interactive Typography Inspector & Filter Bar */
+    .control-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      border-bottom: var(--rule);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .type-tester {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Exhibition Index Table */
+    .exhibit-row {
+      display: grid;
+      grid-template-columns: 90px 1.2fr 1.8fr 180px 140px;
+      border-bottom: var(--rule);
+      transition: background 0.15s;
+      cursor: pointer;
+      align-items: baseline;
+    }
+
+    .exhibit-row:hover {
+      background: var(--swiss-red);
+      color: #fff;
+    }
+
+    .exhibit-cell {
+      padding: 26px 24px;
+      border-right: var(--rule);
+    }
+
+    .exhibit-cell:last-child {
+      border-right: none;
+      text-align: right;
+    }
+
+    .ex-num {
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .ex-title {
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .ex-desc {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      opacity: 0.88;
+    }
+
+    @media (max-width: 960px) {
+      .hero-title-block, .hero-meta-block { grid-column: span 12; border-right: none; }
+      .exhibit-row { grid-template-columns: 1fr; }
+      .exhibit-cell { border-right: none; padding: 12px 24px; }
+    }
+
+    /* Detail Drawer */
+    .detail-showcase {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .poster-preview {
+      grid-column: span 5;
+      padding: 40px;
+      border-right: var(--rule);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 360px;
+      background: var(--swiss-red);
+      color: #fff;
+    }
+
+    .editorial-essay {
+      grid-column: span 7;
+      padding: 40px;
+      columns: 2;
+      column-gap: 36px;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    @media (max-width: 960px) {
+      .poster-preview, .editorial-essay { grid-column: span 12; columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 12-Column Mathematical Grid Overlay -->
+  <div class="grid-overlay" id="gridOverlay">
+    <div class="grid-col-guide"></div><div class="grid-col-guide"></div><div class="grid-col-guide"></div>
+    <div class="grid-col-guide"></div><div class="grid-col-guide"></div><div class="grid-col-guide"></div>
+    <div class="grid-col-guide"></div><div class="grid-col-guide"></div><div class="grid-col-guide"></div>
+    <div class="grid-col-guide"></div><div class="grid-col-guide"></div><div class="grid-col-guide"></div>
+  </div>
+
+  <div class="container">
+    <header class="masthead">
+      <div class="mast-cell" style="grid-column: span 3;">
+        <strong>STYLE 03 // SWISS INTERNATIONAL</strong>
+      </div>
+      <div class="mast-cell" style="grid-column: span 4;">
+        <span>ZÜRICH / BASEL — ISSUE NO. 68</span>
+        <span>GRID: 12 COLUMNS</span>
+      </div>
+      <div class="mast-cell" style="grid-column: span 5; justify-content: flex-end; gap: 10px;">
+        <button class="swiss-btn" id="toggleGridBtn">⊞ 显示 12 列数学网格</button>
+        <button class="swiss-btn" id="toggleInkBtn">◐ 反转纸墨配色</button>
+        <a href="index.html" class="swiss-btn">← 总控台</a>
+        <a href="04-glassmorphism-os.html" class="swiss-btn">04 空间流体 →</a>
+      </div>
+    </header>
+
+    <section class="hero-grid">
+      <div class="hero-title-block">
+        <span class="issue-tag">INTERNATIONALE TYPOGRAFISCHE STIL</span>
+        <h1 class="giant-type" id="resizableHeadline">
+          FORM<br>FOLLOWS<br>RATIO.
+        </h1>
+      </div>
+      <div class="hero-meta-block">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="red-circle"></div>
+          <div style="text-align:right; font-size:12px; line-height:1.6;">
+            JOSEF MÜLLER-BROCKMANN<br>
+            ARMIN HOFMANN<br>
+            MAX BILL // 1957—2026
+          </div>
+        </div>
+        <p class="lead-paragraph">
+          “网格系统是一种秩序工具，设计师借由数学比例将散乱的信息转化为清晰、客观且富有张力的视觉建筑。”
+        </p>
+      </div>
+    </section>
+
+    <div class="control-strip">
+      <div class="filter-group">
+        <button class="swiss-btn active" data-cat="all">全部档案 (ALL 05)</button>
+        <button class="swiss-btn" data-cat="architecture">粗野与现代建筑 (ARCHITECTURE)</button>
+        <button class="swiss-btn" data-cat="typography">字体与网格系统 (TYPOGRAPHY)</button>
+        <button class="swiss-btn" data-cat="acoustics">音乐会海报 (CONCERT POSTERS)</button>
+      </div>
+
+      <div class="type-tester">
+        <label for="scaleRange">主标题字号比例测试:</label>
+        <input type="range" id="scaleRange" min="48" max="128" value="96">
+        <span id="scaleLabel">96PX</span>
+      </div>
+    </div>
+
+    <section id="exhibitList">
+      <!-- Populated by JS -->
+    </section>
+
+    <section class="detail-showcase">
+      <div class="poster-preview" id="activePoster">
+        <div style="font-size:13px; letter-spacing:2px;">TONHALLE ZÜRICH // 1955</div>
+        <div style="font-size:42px; font-weight:900; line-height:1.05;" id="posterTitle">
+          BEETHOVEN<br>SEPTETT
+        </div>
+        <div style="font-size:13px; border-top:1px solid rgba(255,255,255,0.4); padding-top:12px;">
+          点击上方任意展览条目，实时切换左侧瑞士海报结构母题。
+        </div>
+      </div>
+      <div class="editorial-essay">
+        <p style="margin-bottom:16px;">
+          <strong>客观性与数学秩序：</strong>瑞士国际主义平面设计风格诞生于 20 世纪 50 年代的苏黎世与巴塞尔。它摒弃了个人化的插画修辞与繁琐装饰，主张用无衬线字体（Akzidenz-Grotesk、Helvetica）、不对称构图以及严谨的数学网格来传达最纯粹的信息。
+        </p>
+        <p>
+          在本页面中，你可以随时点击右上角的「显示 12 列数学网格」按钮，检视每一个区块与分割线如何严格对齐在 12 栏模数参考线上；也可以拖动字号比例滑块，实时感受巨型无衬线标题与精致衬线导语之间的留白对比张力。
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const exhibits = [
+      { num: '01', title: 'Raster Systeme', cat: 'typography', year: '1961 / ZÜRICH', desc: '《平面设计中的网格系统》——建立现代网页响应式栅格的理论基石。' },
+      { num: '02', title: 'Tonhalle Quartett', cat: 'acoustics', year: '1955 / CONCERT', desc: '运用对角线与圆弧的几何韵律，将贝多芬交响乐的声学结构可视化。' },
+      { num: '03', title: 'Kunsthalle Basel', cat: 'architecture', year: '1959 / PAVILION', desc: '极简黑白对比与负空间切割，让建筑立面成为城市空间的视觉标点。' },
+      { num: '04', title: 'Neue Haas Grotesk', cat: 'typography', year: '1957 / MÜNCHENSTEIN', desc: '追求极致中性的水平终端切口，成为全球公共导视系统的黄金标准。' },
+      { num: '05', title: 'Pavillon Le Corbusier', cat: 'architecture', year: '1967 / ZÜRICHHORN', desc: '模数化钢结构与三原色珐琅板的交响，实现工业预制与诗意空间的统一。' }
+    ];
+
+    const listEl = document.getElementById('exhibitList');
+    const posterTitle = document.getElementById('posterTitle');
+
+    function renderList(filter = 'all') {
+      listEl.innerHTML = '';
+      exhibits
+        .filter(item => filter === 'all' || item.cat === filter)
+        .forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'exhibit-row';
+          row.innerHTML = `
+            <div class="exhibit-cell ex-num">${item.num}</div>
+            <div class="exhibit-cell ex-title">${item.title}</div>
+            <div class="exhibit-cell ex-desc">${item.desc}</div>
+            <div class="exhibit-cell" style="font-size:12px; font-weight:700; text-transform:uppercase;">${item.cat}</div>
+            <div class="exhibit-cell" style="font-family:monospace; font-size:13px;">${item.year}</div>
+          `;
+          row.onclick = () => {
+            posterTitle.innerHTML = item.title.toUpperCase() + '<br><span style="font-size:20px;font-weight:400;">' + item.year + '</span>';
+          };
+          listEl.appendChild(row);
+        });
+    }
+
+    document.querySelectorAll('.filter-group .swiss-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.filter-group .swiss-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderList(btn.dataset.cat);
+      };
+    });
+
+    document.getElementById('toggleGridBtn').onclick = function() {
+      const overlay = document.getElementById('gridOverlay');
+      overlay.classList.toggle('visible');
+      this.classList.toggle('active');
+    };
+
+    document.getElementById('toggleInkBtn').onclick = function() {
+      document.body.classList.toggle('dark-ink');
+      this.classList.toggle('active');
+    };
+
+    document.getElementById('scaleRange').oninput = (e) => {
+      const val = e.target.value;
+      document.getElementById('resizableHeadline').style.fontSize = val + 'px';
+      document.getElementById('scaleLabel').textContent = val + 'PX';
+    };
+
+    renderList();
+  </script>
+</body>
+</html>

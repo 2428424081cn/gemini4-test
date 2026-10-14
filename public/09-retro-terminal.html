@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09 // ROBCO PIP-OS v4.2 — 复古绿磷 CRT 大型机终端</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
+
+    :root {
+      --bg-crt: #061006;
+      --phosphor: #33FF66;
+      --phosphor-dim: rgba(51, 255, 102, 0.28);
+      --phosphor-glow: rgba(51, 255, 102, 0.55);
+    }
+
+    body.amber-crt {
+      --bg-crt: #120B02;
+      --phosphor: #FFB000;
+      --phosphor-dim: rgba(255, 176, 0, 0.28);
+      --phosphor-glow: rgba(255, 176, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-crt);
+      color: var(--phosphor);
+      font-family: 'VT323', 'Share Tech Mono', 'Consolas', monospace;
+      font-size: 20px;
+      min-height: 100vh;
+      padding: 24px;
+      text-shadow: 0 0 8px var(--phosphor-glow);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* CRT Scanlines & Vignette Curvature */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, transparent 58%, rgba(0, 0, 0, 0.72) 100%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.35) 0px,
+          rgba(0, 0, 0, 0.35) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .crt-frame {
+      max-width: 1320px;
+      margin: 0 auto;
+      border: 2px solid var(--phosphor);
+      box-shadow: 0 0 30px var(--phosphor-dim), inset 0 0 25px var(--phosphor-dim);
+      padding: 24px;
+    }
+
+    .crt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed var(--phosphor);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .crt-btn {
+      background: transparent;
+      color: var(--phosphor);
+      border: 1px solid var(--phosphor);
+      padding: 6px 16px;
+      font-family: inherit;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      text-shadow: inherit;
+      transition: all 0.15s;
+    }
+
+    .crt-btn:hover, .crt-btn.active {
+      background: var(--phosphor);
+      color: var(--bg-crt);
+      text-shadow: none;
+      box-shadow: 0 0 15px var(--phosphor);
+    }
+
+    .mainframe-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 980px) {
+      .mainframe-grid { grid-template-columns: 1fr; }
+    }
+
+    .ascii-box {
+      border: 1px solid var(--phosphor);
+      padding: 18px;
+      position: relative;
+    }
+
+    .box-caption {
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      background: var(--bg-crt);
+      padding: 0 8px;
+      font-weight: bold;
+    }
+
+    /* Hex Memory Dump Password Mini-Game */
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 17px;
+    }
+
+    .hack-word {
+      border: 1px solid var(--phosphor-dim);
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hack-word:hover {
+      background: var(--phosphor);
+      color: var(--bg-crt);
+      text-shadow: none;
+    }
+
+    .hack-log {
+      height: 150px;
+      overflow-y: auto;
+      border-top: 1px dashed var(--phosphor);
+      padding-top: 12px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    /* Right: Phosphor Oscilloscope */
+    canvas#scopeCanvas {
+      width: 100%;
+      height: 240px;
+      border: 1px solid var(--phosphor);
+      background: rgba(0, 0, 0, 0.45);
+      display: block;
+      margin: 14px 0;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    input[type="range"].crt-slider {
+      -webkit-appearance: none;
+      width: 65%;
+      height: 6px;
+      background: var(--phosphor-dim);
+      border: 1px solid var(--phosphor);
+    }
+
+    input[type="range"].crt-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 22px;
+      background: var(--phosphor);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="crt-frame">
+    <header class="crt-header">
+      <div>
+        <div style="font-size:28px; font-weight:bold;">*** ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM v4.2 ***</div>
+        <div>STYLE 09 // 1982 GREEN & AMBER PHOSPHOR CRT MAINFRAME</div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="crt-btn" id="phosphorSwitchBtn">◐ 切换绿磷 / 琥珀屏 (P1/P3)</button>
+        <a href="index.html" class="crt-btn">← 返回总控台</a>
+        <a href="10-kinetic-festival.html" class="crt-btn">10 动态酸性音乐节 →</a>
+      </div>
+    </header>
+
+    <div class="mainframe-grid">
+      <!-- Left: Fallout-style Hex Memory Password Cracker -->
+      <section class="ascii-box">
+        <span class="box-caption">[ VAULT-TEC HEX MEMORY MATRIX // 密码破译终端 ]</span>
+        <p style="margin-bottom:8px;">
+          从下方十六进制内存转储中选择正确的 6 字母核心指令密钥。每次猜测将返回字符匹配数 (LIKENESS)：
+        </p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>剩余尝试次数 (ATTEMPTS): <strong id="attemptsBlocks">■ ■ ■ ■</strong></span>
+          <button class="crt-btn" style="font-size:15px; padding:2px 10px;" id="resetHackBtn">重置密钥矩阵</button>
+        </div>
+
+        <div class="word-grid" id="wordGrid">
+          <!-- Generated by JS -->
+        </div>
+
+        <div class="hack-log" id="hackLog">
+          <div>> MEMORY DUMP INITIALIZED AT 0xF9A0...</div>
+          <div>> SELECT A CANDIDATE PASSWORD TO TEST CHARACTER MATCH.</div>
+        </div>
+      </section>
+
+      <!-- Right: Live CRT Phosphor Oscilloscope -->
+      <section class="ascii-box">
+        <span class="box-caption">[ ANALOG CATHODE-RAY OSCILLOSCOPE // 示波器 ]</span>
+        <p>实时调制李萨如（Lissajous）电子束相位与正弦谐波频率：</p>
+
+        <canvas id="scopeCanvas" width="540" height="240"></canvas>
+
+        <div class="slider-row">
+          <label>X轴电子束频率 (FREQ X): <span id="fxVal">3</span> Hz</label>
+          <input type="range" class="crt-slider" id="fxSlider" min="1" max="12" value="3">
+        </div>
+        <div class="slider-row">
+          <label>Y轴调制谐波 (FREQ Y): <span id="fyVal">2</span> Hz</label>
+          <input type="range" class="crt-slider" id="fySlider" min="1" max="12" value="2">
+        </div>
+        <div class="slider-row">
+          <label>示波器模式 (MODE):</label>
+          <div style="display:flex; gap:8px;">
+            <button class="crt-btn active" id="modeWaveBtn" style="font-size:15px; padding:2px 10px;">正弦载波</button>
+            <button class="crt-btn" id="modeLissajousBtn" style="font-size:15px; padding:2px 10px;">李萨如图形</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Sound Beep helper
+    let audioCtx = null;
+    function beep(freq = 880, dur = 0.05) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      g.gain.value = 0.06;
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    }
+
+    // Phosphor P1 Green / P3 Amber toggle
+    document.getElementById('phosphorSwitchBtn').onclick = () => {
+      beep(660, 0.08);
+      document.body.classList.toggle('amber-crt');
+    };
+
+    // --- Hex Password Hacking Mini-Game ---
+    const wordsPool = ['SYSTEM', 'MATRIX', 'VECTOR', 'SIGNAL', 'CIPHER', 'KERNEL', 'DAEMON', 'SOCKET'];
+    let secretWord = 'MATRIX';
+    let attempts = 4;
+
+    function initHackGame() {
+      secretWord = wordsPool[Math.floor(Math.random() * wordsPool.length)];
+      attempts = 4;
+      updateAttemptsUI();
+      const grid = document.getElementById('wordGrid');
+      grid.innerHTML = '';
+      wordsPool.forEach((word, i) => {
+        const hexAddr = '0xF9' + (16 + i * 12).toString(16).toUpperCase();
+        const div = document.createElement('div');
+        div.className = 'hack-word';
+        div.innerHTML = `<span>${hexAddr}  !$#${word}%^</span><span>[SELECT]</span>`;
+        div.onclick = () => checkWord(word);
+        grid.appendChild(div);
+      });
+    }
+
+    function updateAttemptsUI() {
+      document.getElementById('attemptsBlocks').textContent = '■ '.repeat(attempts).trim() || 'LOCKED';
+    }
+
+    function logHack(text) {
+      const log = document.getElementById('hackLog');
+      const line = document.createElement('div');
+      line.textContent = `> ${text}`;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function checkWord(guess) {
+      if (attempts <= 0) {
+        logHack('TERMINAL LOCKED. CLICK RESET MATRIX.');
+        return;
+      }
+      beep(920, 0.05);
+      let match = 0;
+      for (let i = 0; i < 6; i++) {
+        if (guess[i] === secretWord[i]) match++;
+      }
+      if (guess === secretWord) {
+        beep(1320, 0.18);
+        logHack(`[${guess}] EXACT MATCH! 6/6 — ACCESS GRANTED TO MAINFRAME CORE.`);
+      } else {
+        attempts--;
+        updateAttemptsUI();
+        logHack(`[${guess}] ENTRY DENIED. LIKENESS = ${match}/6.`);
+        if (attempts === 0) {
+          beep(220, 0.3);
+          logHack(`SECURITY LOCKOUT! CORRECT KEY WAS [${secretWord}].`);
+        }
+      }
+    }
+
+    document.getElementById('resetHackBtn').onclick = () => {
+      beep(520, 0.08);
+      document.getElementById('hackLog').innerHTML = '<div>> MATRIX RE-SEEDED. READY FOR DECRYPTION.</div>';
+      initHackGame();
+    };
+
+    // --- CRT Oscilloscope ---
+    const scope = document.getElementById('scopeCanvas');
+    const sCtx = scope.getContext('2d');
+    let phase = 0;
+    let fx = 3, fy = 2;
+    let lissajousMode = false;
+
+    document.getElementById('fxSlider').oninput = (e) => {
+      fx = Number(e.target.value);
+      document.getElementById('fxVal').textContent = fx;
+    };
+    document.getElementById('fySlider').oninput = (e) => {
+      fy = Number(e.target.value);
+      document.getElementById('fyVal').textContent = fy;
+    };
+
+    document.getElementById('modeWaveBtn').onclick = function() {
+      lissajousMode = false;
+      this.classList.add('active');
+      document.getElementById('modeLissajousBtn').classList.remove('active');
+    };
+    document.getElementById('modeLissajousBtn').onclick = function() {
+      lissajousMode = true;
+      this.classList.add('active');
+      document.getElementById('modeWaveBtn').classList.remove('active');
+    };
+
+    function drawScope() {
+      const isAmber = document.body.classList.contains('amber-crt');
+      const color = isAmber ? '#FFB000' : '#33FF66';
+
+      sCtx.fillStyle = 'rgba(4, 10, 4, 0.25)';
+      sCtx.fillRect(0, 0, scope.width, scope.height);
+
+      // Grid lines
+      sCtx.strokeStyle = isAmber ? 'rgba(255,176,0,0.12)' : 'rgba(51,255,102,0.12)';
+      sCtx.lineWidth = 1;
+      sCtx.beginPath();
+      sCtx.moveTo(0, scope.height / 2); sCtx.lineTo(scope.width, scope.height / 2);
+      sCtx.moveTo(scope.width / 2, 0); sCtx.lineTo(scope.width / 2, scope.height);
+      sCtx.stroke();
+
+      // Phosphor Beam
+      sCtx.strokeStyle = color;
+      sCtx.lineWidth = 2.5;
+      sCtx.beginPath();
+
+      if (!lissajousMode) {
+        for (let x = 0; x < scope.width; x++) {
+          const t = (x / scope.width) * Math.PI * 2;
+          const y = scope.height / 2 + Math.sin(t * fx + phase) * 65 * Math.cos(t * fy - phase * 0.5);
+          if (x === 0) sCtx.moveTo(x, y);
+          else sCtx.lineTo(x, y);
+        }
+      } else {
+        for (let a = 0; a <= Math.PI * 2; a += 0.02) {
+          const x = scope.width / 2 + Math.sin(fx * a + phase) * 140;
+          const y = scope.height / 2 + Math.sin(fy * a) * 95;
+          if (a === 0) sCtx.moveTo(x, y);
+          else sCtx.lineTo(x, y);
+        }
+      }
+      sCtx.stroke();
+      phase += 0.04;
+      requestAnimationFrame(drawScope);
+    }
+
+    initHackGame();
+    drawScope();
+  </script>
+</body>
+</html>
