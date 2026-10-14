@@ -1,0 +1,7 @@
+{
+  "name": "gemini4-test",
+  "description": "11 HTML pages: frontend test gallery and ten visual styles",
+  "entry": "./src/index.js",
+  "codeVersions": [],
+  "dev": { "port": 18080, "localUpstream": "" }
+}

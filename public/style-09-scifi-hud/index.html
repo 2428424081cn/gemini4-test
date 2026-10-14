@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>���Ӻ� // �Ǽ�̽�� HUD - DEEP SPACE SCI-FI</title>
+  <meta name="description" content="���Ӻ���δ��������Ǽ�̽�� HUD ������ҳ���� 3D ��������ԾǨ Canvas��ս���״�������ϵң������">
+  <link rel="stylesheet" href="../shared/switcher.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="scifi-body">
+  <!-- 3D �����ǿ�ԾǨ Canvas -->
+  <canvas id="space-canvas"></canvas>
+
+  <!-- ս�� HUD ׼�������궨�� -->
+  <div class="hud-frame">
+    <div class="hud-corner top-left"></div>
+    <div class="hud-corner top-right"></div>
+    <div class="hud-corner bottom-left"></div>
+    <div class="hud-corner bottom-right"></div>
+    <div class="hud-crosshair-center"></div>
+  </div>
+
+  <div class="scifi-container">
+    <!-- �����ǽ�����ң����� -->
+    <header class="hud-header">
+      <div class="telemetry-item">
+        <span class="hud-label">VESSEL COORD:</span>
+        <span class="hud-value" id="coords-val">RA 18h 36m / DEC +38�� 47��</span>
+      </div>
+      <div class="hud-ship-title">
+        <span class="title-bracket">[</span>
+        <span class="ship-callsign">EXPLORER // CIPHER-01</span>
+        <span class="title-bracket">]</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="hud-label">WARP CORE:</span>
+        <span class="hud-value status-good">OPTIMAL [100%]</span>
+      </div>
+    </header>
+
+    <main class="scifi-main">
+      <!-- ��ָࣺ�ӹٵ�����ս���״� -->
+      <section class="hud-card commander-card">
+        <div class="card-edge top"></div>
+        <div class="radar-box">
+          <div class="radar-sweep-circle">
+            <div class="radar-line"></div>
+            <div class="blip blip-1"></div>
+            <div class="blip blip-2"></div>
+            <div class="blip blip-3"></div>
+          </div>
+          <div class="radar-tag">TACTICAL SCANNER // ACTIVE</div>
+        </div>
+
+        <h1 class="commander-name">���Ӻ� <span class="en-rank">ALEX LIN</span></h1>
+        <div class="commander-title">CHIEF ARCHITECT // SPACE AVIONICS</div>
+        <p class="commander-bio">
+          8 ����������ϵͳ�����������ƶ���� WebGL ��Ⱦ������ֲ�ʽ����ЭͬЭ�顣������΢�뼶���ӳ�ͨ���� WebGPU ԭ����������֮�䡣
+        </p>
+
+        <!-- ����������ٿ��� -->
+        <div class="warp-control-box">
+          <button class="warp-btn" id="btn-warp-drive">? ����ռ�����ԾǨ (WARP SPEED)</button>
+        </div>
+
+        <div class="comms-panel">
+          <div class="comms-title">SUBSPACE FREQUENCIES:</div>
+          <a href="mailto:alex.lin@deepspace.space" class="comms-link">? DEEP-SPACE TRANSMIT</a>
+          <div class="comms-line">FREQUENCY: CIPHER_LIN_2026</div>
+        </div>
+      </section>
+
+      <!-- �Ҳࣺ�Ǽ���ϵ�������� (PROJECTS & TECH ARSENAL) -->
+      <section class="scifi-sectors-panel">
+        <div class="hud-card sector-card">
+          <div class="card-edge top"></div>
+          <div class="sec-telemetry-hdr">
+            <span class="sec-label">SECTOR ARCHIVES</span>
+            <span class="sec-id">SYSTEMS LOGGED // 04</span>
+          </div>
+
+          <!-- ���� 1 -->
+          <div class="sector-entry">
+            <div class="sector-marker">ALPHA-1</div>
+            <div class="sector-info">
+              <h3 class="sector-title">AetherEngine // WebGPU ������������</h3>
+              <p class="sector-desc">
+                �� WebGPU Compute Shader �����Ĵ��ģ 3D ����ѧ����ģ�⡣ͻ�ƿͻ���ͼ�μ��ޣ�֧��ʮ���������Ӻ��뼶�������㡣
+              </p>
+              <div class="sector-specs">
+                <span>COORD: WebGPU</span>
+                <span>STATUS: 60FPS SYNCHRONIZED</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ���� 2 -->
+          <div class="sector-entry">
+            <div class="sector-marker">BETA-2</div>
+            <div class="sector-info">
+              <h3 class="sector-title">OmniFlow // ����ϵ����Эͬ����</h3>
+              <p class="sector-desc">
+                ���� CRDT ״̬��������ĸ�����ʵʱЭͬ����������������մ����ӳ������֧��ȫ�� 500+ �ڵ��޳�ͻͬƵ��ͼ��
+              </p>
+              <div class="sector-specs">
+                <span>COORD: CRDT & WS</span>
+                <span>LATENCY: < 15ms</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ���� 3 -->
+          <div class="sector-entry">
+            <div class="sector-marker">GAMMA-3</div>
+            <div class="sector-info">
+              <h3 class="sector-title">NeuroCanvas // ����ʽ��ģ̬�Ƕ�����</h3>
+              <p class="sector-desc">
+                �ֻ�ʸ�����۵� 4K �ռ����ͼ�Ķ˵��˼�ʱ��ʽ���㣬��ȼ���ǰ�� Generative AI ������ߡ�
+              </p>
+              <div class="sector-specs">
+                <span>COORD: GenAI Model</span>
+                <span>OUTPUT: Realtime Stream</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ���� 4 -->
+          <div class="sector-entry">
+            <div class="sector-marker">DELTA-4</div>
+            <div class="sector-info">
+              <h3 class="sector-title">HyperMetric // �ǽ�Ⱥ��·׷�������˼��</h3>
+              <p class="sector-desc">
+                ���򳬴��ģ��ԭ����Ⱥ�����˽�������ǣ�ȫ��΢�뼶׷������ڵ���������쳣��
+              </p>
+              <div class="sector-specs">
+                <span>COORD: APM & Rust</span>
+                <span>DIAGNOSTIC: Instant</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- �ײ�ս��״̬�� -->
+    <footer class="hud-footer">
+      <div>ORBITAL STATION BEIJING // EARTH SECTOR 001</div>
+      <div>PURE CSS/JS WEBGPU-INSPIRED CODING ? NO COMMERCIAL TEMPLATES</div>
+    </footer>
+  </div>
+
+  <script src="../shared/audio-synth.js"></script>
+  <script src="../shared/switcher.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

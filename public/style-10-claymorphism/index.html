@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>���Ӻ� // ������� Bento ��ǩ - WARM CLAYMORPHISM</title>
+  <meta name="description" content="���Ӻ������������̬�� Notion Bento ��ǩ��������ҳ������������˫����Ӱ���������Դ��������ɫ��">
+  <link rel="stylesheet" href="../shared/switcher.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="clay-body">
+  <div class="clay-container">
+    <!-- ���������º͵����� -->
+    <header class="clay-card clay-nav">
+      <div class="clay-logo">
+        <div class="clay-logo-dot"></div>
+        <span class="clay-logo-text">���Ӻ�����б�ǩ</span>
+      </div>
+      <div class="clay-nav-links">
+        <a href="#about" class="clay-pill-link">����</a>
+        <a href="#skills" class="clay-pill-link">����</a>
+        <a href="#projects" class="clay-pill-link">����</a>
+        <a href="#contact" class="clay-pill-btn">�ȱ����� ?</a>
+      </div>
+    </header>
+
+    <!-- BENTO GRID ������ -->
+    <main class="clay-bento-grid">
+      <!-- ���� 1: ���˺�����Ƭ (��ߴ� Bento) -->
+      <section class="clay-card bento-hero" id="about">
+        <div class="bento-badge clay-pill-tag">? ����ȫջ�ܹ�ʦ & ����������</div>
+        <h1 class="hero-clay-name">��ã����� <span class="clay-text-terracotta">���Ӻ�</span></h1>
+        <p class="hero-clay-bio">
+          �Ȱ������¶ȵĴ��룬��֯���Ͻ��ָ��������ʸе��������硣���ȫջ���̼ܹ� 8 �꣬������ WebGL��WebGPU ͼ���㷨��߲����ֲ�ʽЭ֮ͬ�С�
+        </p>
+        <div class="hero-status-clay">
+          <span class="status-indicator"></span>
+          <span>Ŀǰ����ս�Լ��ܹ���ѯ�봴�½����з�</span>
+        </div>
+      </section>
+
+      <!-- ���� 2: ������Ȥζͷ�� -->
+      <aside class="clay-card bento-avatar">
+        <div class="clay-avatar-face">
+          <!-- �� SVG ���ȼ������ͷ�� -->
+          <svg viewBox="0 0 100 100" class="clay-face-svg">
+            <circle cx="50" cy="50" r="44" fill="#DE9B72"/>
+            <circle cx="50" cy="50" r="40" fill="#E8B08A"/>
+            <!-- �۾� -->
+            <circle cx="36" cy="45" r="5" fill="#3D352E"/>
+            <circle cx="64" cy="45" r="5" fill="#3D352E"/>
+            <circle cx="38" cy="43" r="1.5" fill="#FFF"/>
+            <circle cx="66" cy="43" r="1.5" fill="#FFF"/>
+            <!-- ���� -->
+            <ellipse cx="28" cy="54" rx="6" ry="3" fill="#F4978E" opacity="0.6"/>
+            <ellipse cx="72" cy="54" rx="6" ry="3" fill="#F4978E" opacity="0.6"/>
+            <!-- ����Ц�� -->
+            <path d="M 40 60 Q 50 68 60 60" fill="none" stroke="#3D352E" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="avatar-tag-clay">Alex Lin // 8 YRS</div>
+      </aside>
+
+      <!-- ���� 3: ����ָ��С���� -->
+      <div class="clay-card bento-stat stat-matcha">
+        <div class="stat-clay-num">8+</div>
+        <div class="stat-clay-lbl">��ϵͳ�ܹ�����</div>
+      </div>
+
+      <div class="clay-card bento-stat stat-lavender">
+        <div class="stat-clay-num">100k+</div>
+        <div class="stat-clay-lbl">WebGPU ���Ӳ���ģ��</div>
+      </div>
+
+      <!-- ���� 4: ���� Bento (�гߴ�) -->
+      <section class="clay-card bento-skills" id="skills">
+        <h2 class="bento-sec-title">?? ���������� (Skills)</h2>
+        <div class="clay-pills-wrap">
+          <div class="clay-skill-item">
+            <span class="skill-name">WebGL & WebGPU</span>
+            <span class="skill-tag-clay">ͼ����Ⱦ / ��ɫ��</span>
+          </div>
+          <div class="clay-skill-item">
+            <span class="skill-name">TypeScript & React</span>
+            <span class="skill-tag-clay">�ִ�ȫջ / ΢ǰ��</span>
+          </div>
+          <div class="clay-skill-item">
+            <span class="skill-name">Rust & WebAssembly</span>
+            <span class="skill-tag-clay">��GC�����ܼ���</span>
+          </div>
+          <div class="clay-skill-item">
+            <span class="skill-name">CRDT ����Эͬ</span>
+            <span class="skill-tag-clay">���뼶��ػ���ͬ��</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ���� 5: ������ǩ�� (Sticky Note) -->
+      <aside class="clay-card bento-sticky" id="sticky-note">
+        <div class="pin-dot"></div>
+        <div class="sticky-title">?? ����������ǩ</div>
+        <p class="sticky-text">
+          �����벻Ӧ�����������ָ���ÿһ��ת����ÿһ����Ӱ����͹��ɣ��������û����ݵ����������⡣��
+        </p>
+        <button class="clay-sm-btn" id="btn-change-note">����һ����� ??</button>
+      </aside>
+
+      <!-- ���� 6: ��ѡ��Ʒչ�� (4 ������) -->
+      <section class="clay-card bento-projects" id="projects">
+        <h2 class="bento-sec-title">?? ���﹤�� (Crafted Projects)</h2>
+        <div class="clay-projects-grid">
+          <!-- ��Ŀ 1 -->
+          <div class="clay-subcard">
+            <div class="subcard-icon">?</div>
+            <h3 class="subcard-title">AetherEngine</h3>
+            <p class="subcard-desc">���� WebGPU ����һ������ 3D ��Ⱦ�������������棬��ʮ��̬��������ҳ��˿�����衣</p>
+            <div class="subcard-pills"><span>WebGPU</span><span>Rust</span></div>
+          </div>
+
+          <!-- ��Ŀ 2 -->
+          <div class="clay-subcard">
+            <div class="subcard-icon">??</div>
+            <h3 class="subcard-title">OmniFlow Эͬ</h3>
+            <p class="subcard-desc">�ֲ�ʽ������Эͬ�װ壬���� CRDT ״̬�Զ������㷨��֧�� 500+ �˿���ʵʱͿѻ������</p>
+            <div class="subcard-pills"><span>CRDT</span><span>WebSocket</span></div>
+          </div>
+
+          <!-- ��Ŀ 3 -->
+          <div class="clay-subcard">
+            <div class="subcard-icon">??</div>
+            <h3 class="subcard-title">NeuroCanvas</h3>
+            <p class="subcard-desc">�ں�����ʽ AI �Ķ�ģ̬������������̨��ʸ���ʴ�����ҵ���߾���Ⱦ����ʽֱ����</p>
+            <div class="subcard-pills"><span>GenAI</span><span>React</span></div>
+          </div>
+
+          <!-- ��Ŀ 4 -->
+          <div class="clay-subcard">
+            <div class="subcard-icon">??</div>
+            <h3 class="subcard-title">HyperMetric</h3>
+            <p class="subcard-desc">רΪ��ԭ��΢��������΢�뼶�ֲ�ʽ�������ϵͳ�����ɶ�Ϥ��ʮ��ڵ㼯Ⱥ����ָ�ꡣ</p>
+            <div class="subcard-pills"><span>APM</span><span>Go</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ���� 7: ��ů������ (�ײ�����) -->
+      <section class="clay-card bento-contact" id="contact">
+        <div class="contact-clay-inner">
+          <h2 class="contact-clay-h2">��һ����Щ�������ĵĺ���Ʒ��</h2>
+          <p class="contact-clay-sub">��ӭ̽��ȫջ������������άǰ��ͼ�λ�ϵͳ�ܹ�������ѯ��</p>
+          <div class="contact-clay-btns">
+            <a href="mailto:alex.lin@claymorphism.warm" class="clay-action-btn btn-warm-primary">�����ʼ� ?</a>
+            <button class="clay-action-btn btn-warm-secondary" id="btn-copy-clay-wechat">����΢��: CIPHER_LIN</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- �ײ�ůɫҳ�� -->
+    <footer class="clay-card clay-footer">
+      <div>LIN ZIHANG ? 2026 // WARM CLAYMORPHISM EDITION</div>
+      <div>PURE CSS 3D DUAL-INSET SHADOWS ? ZERO FRAMEWORKS</div>
+    </footer>
+  </div>
+
+  <script src="../shared/audio-synth.js"></script>
+  <script src="../shared/switcher.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

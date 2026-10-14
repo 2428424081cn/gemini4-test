@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>���Ӻ� // �����ն� - CYBERPUNK TERMINAL</title>
+  <meta name="description" content="���Ӻ��������ڿͷ�������ҳ��������ʽ����̨�������ַ�����CRT�������Ч">
+  <link rel="stylesheet" href="../shared/switcher.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- �����ַ��걳�� Canvas -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- CRT ��Ļɨ������߽ǰ����˾� -->
+  <div class="crt-overlay"></div>
+  <div class="scanline"></div>
+
+  <div class="cyber-container">
+    <!-- ���� HUD ״̬�� -->
+    <header class="cyber-header">
+      <div class="hud-status">
+        <span class="pulse-dot"></span>
+        <span class="hud-text">STATUS: NEURAL_LINK_ONLINE [ENCRYPTED]</span>
+      </div>
+      <div class="hud-title glitch" data-text="CIPHER://LIN_ZIHANG">CIPHER://LIN_ZIHANG</div>
+      <div class="hud-metrics">
+        <span>MEM: 98.4%</span>
+        <span>LATENCY: 1.2ms</span>
+        <span id="cyber-clock">00:00:00 UTC</span>
+      </div>
+    </header>
+
+    <!-- �����ն����岼�� (˫��: ��࿨Ƭ�������Ҳ�ʵʱ��������̨) -->
+    <main class="cyber-main">
+      <!-- ��ࣺ�ڿ����ݿ� -->
+      <section class="cyber-id-card">
+        <div class="avatar-box">
+          <div class="avatar-glitch-wrapper">
+            <!-- �� CSS/SVG �����ڿ�ͷ�� -->
+            <svg class="cyber-avatar-svg" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="cyber-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00ffcc" />
+                  <stop offset="100%" stop-color="#ff0055" />
+                </linearGradient>
+              </defs>
+              <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="#080d14" stroke="url(#cyber-grad)" stroke-width="2"/>
+              <!-- ����������ڿ����� -->
+              <circle cx="40" cy="45" r="6" fill="#00ffcc" class="glow-eye"/>
+              <circle cx="60" cy="45" r="6" fill="#ff0055" class="glow-eye"/>
+              <line x1="30" y1="45" x2="70" y2="45" stroke="#00ffcc" stroke-dasharray="2 2" stroke-width="1.5"/>
+              <path d="M 35 65 Q 50 78 65 65" stroke="#00ffcc" fill="none" stroke-width="3"/>
+              <rect x="42" y="58" width="16" height="4" fill="#ff0055" />
+            </svg>
+          </div>
+          <div class="id-tag">OPERATIVE ID: 0x9F7A2</div>
+        </div>
+
+        <h1 class="id-name">���Ӻ� <span class="id-alias">[Alex Lin]</span></h1>
+        <div class="id-role">����ȫջ�ܹ�ʦ // ������������ʦ</div>
+        
+        <p class="id-bio">
+          8�깥�ᾭ�顣רע�ڹ������΢�뼶����������߳����������������һ�� Web ϵͳ�������� WebGL��WebGPU �ײ���Ⱦ������²�������֮�䡣
+        </p>
+
+        <!-- ����������ʾ��ť -->
+        <div class="quick-cmd-list">
+          <div class="quick-title">? ����ִ��ָ��:</div>
+          <button class="cmd-pill" data-cmd="skills">cat skills.dat</button>
+          <button class="cmd-pill" data-cmd="projects">./list_projects.sh</button>
+          <button class="cmd-pill" data-cmd="bio">whoami --verbose</button>
+          <button class="cmd-pill" data-cmd="contact">open_comms.exe</button>
+          <button class="cmd-pill" data-cmd="clear">clear</button>
+        </div>
+
+        <!-- �ⲿЭ��ֱ�� -->
+        <div class="cyber-comms">
+          <a href="mailto:alex.lin@cyberpunk.io" class="comm-link" target="_blank">? EMAIL</a>
+          <a href="https://github.com" class="comm-link" target="_blank">?? GITHUB</a>
+          <a href="https://twitter.com" class="comm-link" target="_blank">?? TRANSMIT</a>
+        </div>
+      </section>
+
+      <!-- �Ҳࣺ��ʵ�ɽ����ڿ��ն� -->
+      <section class="cyber-terminal-panel">
+        <div class="terminal-bar">
+          <div class="term-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="term-title">bash - cipher@root: ~/alex-matrix</div>
+          <div class="term-actions">
+            <button id="btn-sound-toggle" class="term-btn" title="�ն���Ч">?? SOUND</button>
+          </div>
+        </div>
+
+        <div class="terminal-body" id="term-output">
+          <!-- �ն˳�ʼϵͳ������Ϣ -->
+          <div class="term-line system-welcome">
+            <span class="term-green">> CYBER_CORE KERNEL v4.19.0-X BOOT COMPLETED</span>
+          </div>
+          <div class="term-line">
+            <span class="term-cyan">> NEURAL INTERFACE ATTACHED. TYPE 'help' OR CLICK COMMANDS TO EXPLORE.</span>
+          </div>
+          <div class="term-line divider">------------------------------------------------------------</div>
+        </div>
+
+        <div class="terminal-input-row">
+          <span class="term-prompt">root@cipher:~$</span>
+          <input type="text" id="term-input" autocomplete="off" spellcheck="false" placeholder="�������� (���� 'help' �鿴����ָ��)..." autofocus>
+          <button id="btn-term-enter" class="term-enter-btn">ENTER</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- �ײ�״ָ̬ʾ -->
+    <footer class="cyber-footer">
+      <div>SYSTEM INTEGRITY: 100% | PROTOCOL: WEBGPU/WASM | SECURE SHELL</div>
+      <div>DESIGNED & CODED WITH PURE HTML/CSS/JS (NO TEMPLATES)</div>
+    </footer>
+  </div>
+
+  <script src="../shared/audio-synth.js"></script>
+  <script src="../shared/switcher.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
