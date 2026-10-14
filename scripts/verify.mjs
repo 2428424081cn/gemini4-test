@@ -10,10 +10,16 @@ async function check(directory, prefix = '') {
     if (file.isDirectory()) { await check(new URL(`${file.name}/`, directory), route); continue; }
     const response = await handler.fetch(new Request(`https://example.test${route}`));
     assert.equal(response.status, 200, route);
-    assert.equal(await response.text(), await readFile(new URL(file.name, directory), 'utf8'), route);
+    const source = new TextDecoder('utf-8', { fatal: true }).decode(await readFile(new URL(file.name, directory)));
+    const body = await response.text();
+    assert.equal(body, source, route);
+    assert.ok(!body.includes('\uFFFD'), `Corrupted text: ${route}`);
+    assert.match(response.headers.get('Content-Type'), /charset=utf-8/i, route);
     assetCount++;
     if (file.name === 'index.html') {
       htmlCount++;
+      assert.match(body, /<meta charset="UTF-8">/i, route);
+      assert.match(body.match(/<title>(.*?)<\/title>/s)?.[1] || '', /[\u4e00-\u9fff]/, `Chinese title: ${route}`);
       assert.equal((await handler.fetch(new Request(`https://example.test${prefix}/`))).status, 200);
       if (prefix) {
         const redirect = await handler.fetch(new Request(`https://example.test${prefix}?preview=1`));
