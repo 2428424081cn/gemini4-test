@@ -1,411 +1,2074 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>十种极致前端风格全景测试舱 // FRONTEND AESTHETIC BENCHMARK</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>街头火并：暗夜交锋 (60s Cinematic Animation)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@500;700&display=swap');
 
-    :root {
-      --bg: #090A0F;
-      --card: #12151E;
-      --border: rgba(255, 255, 255, 0.1);
-      --accent: #6366F1;
-      --text: #F3F4F6;
-      --muted: #9CA3AF;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050608;
+            color: #e2e8f0;
+            font-family: 'Noto Sans SC', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      min-height: 100vh;
-      background-image:
-        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.14), transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(236, 72, 153, 0.12), transparent 40%);
-    }
+        /* Custom Range Slider for Timeline */
+        input[type=range].timeline-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            outline: none;
+            cursor: pointer;
+            transition: height 0.15s ease;
+        }
 
-    header.benchmark-header {
-      max-width: 1480px;
-      margin: 0 auto;
-      padding: 36px 32px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+        input[type=range].timeline-slider:hover {
+            height: 10px;
+        }
 
-    .title-group h1 {
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-top: 8px;
-    }
+        input[type=range].timeline-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 12px #ef4444, 0 0 4px #ffffff;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
 
-    .tag-pill {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: #A5B4FC;
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid rgba(99, 102, 241, 0.35);
-      padding: 4px 12px;
-      border-radius: 999px;
-    }
+        input[type=range].timeline-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
 
-    /* Interactive Judge Scoreboard */
-    .score-widget {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
+        .act-marker {
+            position: absolute;
+            top: -6px;
+            width: 2px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.35);
+            pointer-events: none;
+        }
 
-    .total-score {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 32px;
-      font-weight: 800;
-      color: #34D399;
-    }
+        .glass-panel {
+            background: rgba(10, 12, 18, 0.78);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    /* Live Iframe Drawer */
-    .preview-drawer {
-      max-width: 1480px;
-      margin: 24px auto 0;
-      padding: 0 32px;
-      display: none;
-    }
+        .neon-text-red {
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.8), 0 0 25px rgba(239, 68, 68, 0.4);
+        }
 
-    .preview-drawer.active {
-      display: block;
-    }
-
-    .iframe-shell {
-      background: #000;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
-    }
-
-    .iframe-bar {
-      background: #181B26;
-      padding: 10px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-    }
-
-    iframe#liveFrame {
-      width: 100%;
-      height: 580px;
-      border: none;
-      display: block;
-      background: #fff;
-    }
-
-    /* 10 Cards Grid */
-    .cards-grid {
-      max-width: 1480px;
-      margin: 0 auto;
-      padding: 28px 32px 64px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
-      gap: 22px;
-    }
-
-    @media (max-width: 520px) {
-      .cards-grid { grid-template-columns: 1fr; }
-    }
-
-    .style-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .style-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255, 255, 255, 0.28);
-    }
-
-    .swatch-strip {
-      height: 6px;
-      width: 100%;
-      border-radius: 999px;
-      margin-bottom: 18px;
-    }
-
-    .card-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .card-title {
-      font-size: 21px;
-      font-weight: 700;
-      margin: 6px 0 10px;
-    }
-
-    .card-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 18px;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-link {
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      transition: all 0.15s;
-    }
-
-    .btn-link:hover {
-      background: #fff;
-      color: #000;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .rate-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-    }
-
-    .rate-input {
-      width: 56px;
-      background: #090A0F;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #34D399;
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-weight: 700;
-      text-align: center;
-    }
-  </style>
+        .neon-text-blue {
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+    </style>
 </head>
-<body>
+<body class="h-screen w-screen flex flex-col justify-between items-center relative">
 
-  <header class="benchmark-header">
-    <div class="title-group">
-      <span class="tag-pill">10 DISTINCT FRONTEND ARCHITECTURES // ZERO TEMPLATES</span>
-      <h1>十种完全不同风格的前端页面 · 评测总控台</h1>
-    </div>
-
-    <div class="score-widget">
-      <div>
-        <div style="font-size:12px; color:var(--muted);">考官实时总评分 (满分 100)</div>
-        <div style="font-size:12px; color:#A5B4FC;">可在下方每张卡片单独打分 (0-10分)</div>
-      </div>
-      <div class="total-score" id="totalScoreDisplay">100 / 100</div>
-    </div>
-  </header>
-
-  <!-- Live In-Page Preview Drawer -->
-  <section class="preview-drawer" id="previewDrawer">
-    <div class="iframe-shell">
-      <div class="iframe-bar">
-        <span id="previewTitle">LIVE PREVIEW // 01-neo-brutalism.html</span>
-        <div style="display:flex; gap:10px;">
-          <a href="01-neo-brutalism.html" target="_blank" id="openNewTabLink" class="btn-link" style="padding:4px 12px;">↗ 全屏独立打开</a>
-          <button class="btn-link" style="padding:4px 12px;" onclick="closePreview()">✕ 收起预览窗</button>
+    <!-- Top HUD Overlay -->
+    <div class="w-full max-w-7xl px-4 pt-3 z-20 flex flex-wrap justify-between items-center gap-2 pointer-events-none">
+        <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3 pointer-events-auto shadow-lg">
+            <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" id="recDot"></div>
+            <div>
+                <div class="text-xs text-slate-400 tracking-widest uppercase">60FPS Procedural Cinema</div>
+                <h1 class="text-sm sm:text-base font-black tracking-wider text-white flex items-center gap-2">
+                    <span>街头火并：暗夜交锋</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 mono-font" id="bulletTimeBadge" style="display:none;">BULLET TIME 0.25x</span>
+                </h1>
+            </div>
         </div>
-      </div>
-      <iframe id="liveFrame" src=""></iframe>
+
+        <!-- Current Act Indicator -->
+        <div class="glass-panel px-5 py-2 rounded-xl text-center pointer-events-auto shadow-lg border-l-4 border-l-red-500 transition-all duration-300" id="actBanner">
+            <div class="text-[10px] mono-font uppercase tracking-widest text-amber-400" id="actSub">ACT I • 00:00 - 00:12</div>
+            <div class="text-sm sm:text-base font-bold text-white tracking-wide" id="actTitle">第一幕：暗夜对峙 (The Standoff)</div>
+        </div>
+
+        <!-- Camera & Audio Quick Status -->
+        <div class="glass-panel px-4 py-2 rounded-xl hidden md:flex items-center gap-4 text-xs mono-font text-slate-300 pointer-events-auto">
+            <div>CAM: <span id="camTelemetry" class="text-cyan-400">1.00x [WIDE]</span></div>
+            <div class="h-3 w-[1px] bg-slate-700"></div>
+            <div>CASINGS: <span id="casingCount" class="text-amber-400">0</span></div>
+            <div class="h-3 w-[1px] bg-slate-700"></div>
+            <div>FPS: <span id="fpsCounter" class="text-emerald-400">60</span></div>
+        </div>
     </div>
-  </section>
 
-  <main class="cards-grid" id="cardsContainer">
-    <!-- Generated by JS -->
-  </main>
+    <!-- Main Viewport Container -->
+    <div class="relative flex-1 w-full flex items-center justify-center overflow-hidden p-2 sm:p-4">
+        <div class="relative w-full max-w-7xl aspect-video bg-black rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.9)] border border-slate-800/80">
+            <canvas id="cinemaCanvas" class="w-full h-full block"></canvas>
 
-  <script>
-    const pages = [
-      {
-        num: 'STYLE 01',
-        file: '01-neo-brutalism.html',
-        title: '新粗野主义合成器与街头贴纸实验室',
-        en: 'Neo-Brutalism Beatmaker & Sticker Lab',
-        grad: 'linear-gradient(90deg, #FFE600, #FF3366, #00E575)',
-        desc: '4px 纯黑实线边框、8px 硬边投射阴影、高饱和撞色。内置真实发声的 WebAudio 8步音序鼓机与可自由拖拽排版的街头贴纸画布。'
-      },
-      {
-        num: 'STYLE 02',
-        file: '02-cyberpunk-hud.html',
-        title: '赛博朋克深空防御战术终端 HUD',
-        en: 'Cyberpunk Orbital Tactical Radar HUD',
-        grad: 'linear-gradient(90deg, #00F0FF, #FF0055, #FFB800)',
-        desc: '多边形斜切机甲面板、CRT 扫描线与霓虹发光。搭载 60FPS 相控阵雷达（点击敌机直接发射电磁炮拦截）与命令行终端。'
-      },
-      {
-        num: 'STYLE 03',
-        file: '03-swiss-editorial.html',
-        title: '瑞士国际主义排版与建筑展览志',
-        en: 'Swiss International Typographic Grid',
-        grad: 'linear-gradient(90deg, #E62E25, #121212, #F4F1EA)',
-        desc: '致敬 Müller-Brockmann 的严格 12 列数学网格。支持一键显隐 12 栏参考线、实时调节无衬线标题字号比例与展览分类筛选。'
-      },
-      {
-        num: 'STYLE 04',
-        file: '04-glassmorphism-os.html',
-        title: '液态极光与空间计算毛玻璃系统',
-        en: 'Spatial Computing & Aurora Glassmorphism',
-        grad: 'linear-gradient(90deg, #6366F1, #EC4899, #06B6D4)',
-        desc: '多层高斯模糊毛玻璃、高光折射边与 3D 视差悬浮窗。内置全息呼吸专注光球、WebAudio 174Hz 治愈声场混音台与极光光谱切换器。'
-      },
-      {
-        num: 'STYLE 05',
-        file: '05-y2k-retro-os.html',
-        title: '千禧年复古桌面系统 (Win98 / Y2K)',
-        en: 'Y2K Retro Desktop OS 98',
-        grad: 'linear-gradient(90deg, #008080, #000080, #C0C0C0)',
-        desc: '像素级还原经典凹凸立体边框、开始菜单与多窗口拖拽层级管理。内置可绘画盖章的画图板 Paint.exe 与 56K 拨号音/电子乐播放器。'
-      },
-      {
-        num: 'STYLE 06',
-        file: '06-zen-minimalist.html',
-        title: '东方侘寂茶道与数字枯山水庭院',
-        en: 'Wabi-Sabi Tea Ceremony & Karesansui',
-        grad: 'linear-gradient(90deg, #4A5D4E, #EAE2D3, #B83B2B)',
-        desc: '温润宣纸底纹、宋刻竖排诗文与朱砂印章。可用鼠标木耙在枯山水沙盘上勾勒涟漪、置入青苔山石，并体验颂钵铜磬候汤计时。'
-      },
-      {
-        num: 'STYLE 07',
-        file: '07-luxury-watch.html',
-        title: '黑金顶奢陀飞轮高定机械腕表馆',
-        en: 'Haute Horlogerie Tourbillon Atelier',
-        grad: 'linear-gradient(90deg, #D4AF37, #F3E5AB, #1A2230)',
-        desc: '黑曜石与 18K 香槟金奢华质感。搭载实时同步走时的精细 SVG 机械腕表（含旋转陀飞轮笼架、飞返计时秒针、镂空机芯透视与表壳定制）。'
-      },
-      {
-        num: 'STYLE 08',
-        file: '08-clay-playful.html',
-        title: '3D 软泥粘土风互动盲盒游乐园',
-        en: '3D Claymorphism Interactive Toybox',
-        grad: 'linear-gradient(90deg, #FF85B3, #52E5B7, #FFD15C)',
-        desc: '马卡龙多巴胺配色与膨胀感内外双重柔和阴影。包含戳肚子会 Q 弹变形发声的软泥萌宠工坊，以及 15 孔解压硅胶按按乐 (Pop-It)。'
-      },
-      {
-        num: 'STYLE 09',
-        file: '09-retro-terminal.html',
-        title: '1982 复古绿磷/琥珀 CRT 大型机终端',
-        en: '1982 Phosphor CRT Mainframe & Oscilloscope',
-        grad: 'linear-gradient(90deg, #33FF66, #FFB000, #061006)',
-        desc: '纯正单色荧光余晖与阴极射线管暗角。内置辐射风格十六进制内存密码破译游戏，以及可调李萨如（Lissajous）图形的实时示波器。'
-      },
-      {
-        num: 'STYLE 10',
-        file: '10-kinetic-festival.html',
-        title: '动态拉伸字体与酸性电子音乐节',
-        en: 'Kinetic Typography & Acid Rave Festival',
-        grad: 'linear-gradient(90deg, #CCFF00, #7000FF, #111111)',
-        desc: '高对比电光酸性绿与液态铬金属星芒。巨型标题随鼠标轨迹实时产生斜切与字宽扭曲，支持舞台阵容筛选与专属 VIP 电音通票生成。'
-      }
-    ];
-
-    const container = document.getElementById('cardsContainer');
-
-    function renderCards() {
-      container.innerHTML = '';
-      pages.forEach((p, idx) => {
-        const card = document.createElement('article');
-        card.className = 'style-card';
-        card.innerHTML = `
-          <div>
-            <div class="swatch-strip" style="background: ${p.grad};"></div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="card-num">${p.num} // ${p.file}</span>
-              <span class="card-num">${p.en}</span>
+            <!-- Start / Audio Unlock Overlay -->
+            <div id="startOverlay" class="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-30 transition-opacity duration-500">
+                <div class="max-w-md text-center px-6 py-8 rounded-2xl glass-panel border border-slate-700/60 shadow-2xl">
+                    <div class="text-xs mono-font tracking-widest text-red-400 uppercase mb-1">Interactive 60-Second Action Choreography</div>
+                    <h2 class="text-3xl font-black text-white mb-2 neon-text-red">街头火并 · 暗夜交锋</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+                        全程序化骨骼角色、实时弹壳物理、霓虹积水倒影、子弹时间慢镜头与 Web Audio 合成音效。支持任意拖拽进度条预览 5 幕剧情。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button id="startWithAudioBtn" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(220,38,38,0.6)] transition transform active:scale-95 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13l11-6.5-11-6.5z"/></svg>
+                            <span>开启声效播放 (60s)</span>
+                        </button>
+                        <button id="startMutedBtn" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition flex items-center justify-center gap-2">
+                            <span>静音播放</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <h2 class="card-title">${p.title}</h2>
-            <p class="card-desc">${p.desc}</p>
-          </div>
-          <div class="card-actions">
-            <div style="display:flex; gap:8px;">
-              <a href="${p.file}" class="btn-link btn-primary">进入页面 →</a>
-              <button class="btn-link" onclick="openPreview('${p.file}', '${p.title}')">👁 页内预览</button>
+        </div>
+    </div>
+
+    <!-- Bottom Timeline & Controls -->
+    <div class="w-full max-w-7xl px-4 pb-4 z-20">
+        <div class="glass-panel p-3 sm:p-4 rounded-2xl shadow-2xl flex flex-col gap-2.5">
+            <!-- Timeline Scrubber with Act Markers -->
+            <div class="relative w-full flex items-center">
+                <input type="range" id="timelineSlider" class="timeline-slider z-10" min="0" max="60" step="0.01" value="0">
+                <!-- Act Dividers at 12s (20%), 25s (41.67%), 40s (66.67%), 52s (86.67%) -->
+                <div class="act-marker" style="left: 20%;" title="12s: 第二幕 擦枪走火"></div>
+                <div class="act-marker" style="left: 41.67%;" title="25s: 第三幕 火力压制与侧翼包抄"></div>
+                <div class="act-marker" style="left: 66.67%;" title="40s: 第四幕 爆破高潮"></div>
+                <div class="act-marker" style="left: 86.67%;" title="52s: 第五幕 警笛逼近与残局"></div>
             </div>
-            <div class="rate-box">
-              <span>打分:</span>
-              <input type="number" class="rate-input" min="0" max="10" step="0.5" value="10" oninput="recalcTotal()">
-              <span>/10</span>
+
+            <!-- Controls Row -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button id="playPauseBtn" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow transition">
+                        <span id="playPauseIcon">⏸</span>
+                        <span id="playPauseText">暂停</span>
+                    </button>
+                    <button id="restartBtn" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium flex items-center gap-1 transition" title="重头开始">
+                        <span>↺ 重播</span>
+                    </button>
+                    <button id="audioToggleBtn" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs sm:text-sm font-medium flex items-center gap-1.5 transition">
+                        <span id="audioIcon">🔊</span>
+                        <span id="audioText">音效: 开</span>
+                    </button>
+                    <div class="px-3 py-1.5 rounded-lg bg-black/50 border border-slate-800 mono-font text-xs sm:text-sm text-white">
+                        <span id="timecodeCur" class="text-red-400 font-bold">00:00.00</span>
+                        <span class="text-slate-500"> / 01:00.00</span>
+                    </div>
+                </div>
+
+                <!-- Quick Act Jump Buttons -->
+                <div class="flex flex-wrap items-center gap-1.5 text-[11px] sm:text-xs">
+                    <span class="text-slate-400 mr-1 hidden md:inline">章节跳转:</span>
+                    <button data-jump="0" class="act-jump-btn px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-red-500/30 hover:text-white text-slate-300 border border-slate-700 transition">I.对峙(0s)</button>
+                    <button data-jump="12" class="act-jump-btn px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-red-500/30 hover:text-white text-slate-300 border border-slate-700 transition">II.交火(12s)</button>
+                    <button data-jump="25" class="act-jump-btn px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-red-500/30 hover:text-white text-slate-300 border border-slate-700 transition">III.包抄&慢镜(25s)</button>
+                    <button data-jump="40" class="act-jump-btn px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-red-500/30 hover:text-white text-slate-300 border border-slate-700 transition">IV.爆破(40s)</button>
+                    <button data-jump="52" class="act-jump-btn px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-red-500/30 hover:text-white text-slate-300 border border-slate-700 transition">V.残局(52s)</button>
+                </div>
             </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
+        </div>
+    </div>
 
-    function openPreview(file, title) {
-      const drawer = document.getElementById('previewDrawer');
-      drawer.classList.add('active');
-      document.getElementById('liveFrame').src = file;
-      document.getElementById('previewTitle').textContent = `LIVE PREVIEW // ${title} (${file})`;
-      document.getElementById('openNewTabLink').href = file;
-      drawer.scrollIntoView({ behavior: 'smooth' });
-    }
+    <script>
+        const canvas = document.getElementById('cinemaCanvas');
+        const ctx = canvas.getContext('2d');
 
-    function closePreview() {
-      document.getElementById('previewDrawer').classList.remove('active');
-      document.getElementById('liveFrame').src = '';
-    }
+        // Fixed internal cinematic resolution (16:9 Full HD)
+        const W = 1920;
+        const H = 1080;
+        canvas.width = W;
+        canvas.height = H;
 
-    function recalcTotal() {
-      let sum = 0;
-      document.querySelectorAll('.rate-input').forEach(inp => {
-        const val = Math.min(10, Math.max(0, Number(inp.value) || 0));
-        sum += val;
-      });
-      document.getElementById('totalScoreDisplay').textContent = `${sum.toFixed(1).replace(/\.0$/, '')} / 100`;
-    }
+        // Math Helpers
+        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+        const lerp = (a, b, t) => a + (b - a) * clamp(t, 0, 1);
+        const smoothstep = (edge0, edge1, x) => {
+            const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+            return t * t * (3 - 2 * t);
+        };
+        const easeOutCubic = (t) => 1 - Math.pow(1 - clamp(t, 0, 1), 3);
+        const easeInOutQuad = (t) => {
+            t = clamp(t, 0, 1);
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        };
+        const seededRandom = (seed) => {
+            const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+            return x - Math.floor(x);
+        };
 
-    renderCards();
-  </script>
+        class ProceduralSoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = false;
+                this.rainGain = null;
+                this.sirenOsc = null;
+                this.sirenGain = null;
+                this.fireGain = null;
+            }
+
+            init() {
+                if (this.ctx) return;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioCtx();
+
+                // Create continuous pink/white noise buffer for rain & fire
+                const bufferSize = this.ctx.sampleRate * 3;
+                this.noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = this.noiseBuffer.getChannelData(0);
+                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    b0 = 0.99886 * b0 + white * 0.0555179;
+                    b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520;
+                    b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522;
+                    b5 = -0.7616 * b5 - white * 0.0168980;
+                    output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.04;
+                    b6 = white * 0.115926;
+                }
+
+                // Ambient Rain Loop
+                const rainSource = this.ctx.createBufferSource();
+                rainSource.buffer = this.noiseBuffer;
+                rainSource.loop = true;
+                const rainFilter = this.ctx.createBiquadFilter();
+                rainFilter.type = 'bandpass';
+                rainFilter.frequency.value = 1200;
+                rainFilter.Q.value = 0.7;
+                this.rainGain = this.ctx.createGain();
+                this.rainGain.gain.value = 0.0;
+                rainSource.connect(rainFilter);
+                rainFilter.connect(this.rainGain);
+                this.rainGain.connect(this.ctx.destination);
+                rainSource.start();
+
+                // Police Siren Loop (Act V)
+                this.sirenOsc = this.ctx.createOscillator();
+                this.sirenOsc.type = 'sawtooth';
+                this.sirenOsc.frequency.value = 650;
+                const sirenFilter = this.ctx.createBiquadFilter();
+                sirenFilter.type = 'lowpass';
+                sirenFilter.frequency.value = 1800;
+                this.sirenGain = this.ctx.createGain();
+                this.sirenGain.gain.value = 0.0;
+                this.sirenOsc.connect(sirenFilter);
+                sirenFilter.connect(this.sirenGain);
+                this.sirenGain.connect(this.ctx.destination);
+                this.sirenOsc.start();
+            }
+
+            setEnabled(flag) {
+                this.enabled = flag;
+                if (flag && !this.ctx) this.init();
+                if (this.ctx && this.ctx.state === 'suspended' && flag) {
+                    this.ctx.resume();
+                }
+                if (!flag && this.rainGain) {
+                    this.rainGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+                    this.sirenGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+                }
+            }
+
+            updateAmbience(t, isPlaying) {
+                if (!this.ctx || !this.enabled || !isPlaying) {
+                    if (this.rainGain && this.ctx) {
+                        this.rainGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+                        this.sirenGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+                    }
+                    return;
+                }
+                const now = this.ctx.currentTime;
+                // Rain volume (quieter during slow-mo 32-36s)
+                const slowMoDuck = (t >= 32 && t <= 36) ? 0.08 : 0.28;
+                const fadeOut = t > 57 ? clamp((60 - t) / 3, 0, 1) : 1;
+                this.rainGain.gain.setTargetAtTime(slowMoDuck * fadeOut, now, 0.1);
+
+                // Siren wail in Act V (50s - 60s)
+                if (t >= 50 && t < 59.8) {
+                    const sirenIntensity = clamp((t - 50) / 4, 0, 1) * fadeOut * 0.06;
+                    this.sirenGain.gain.setTargetAtTime(sirenIntensity, now, 0.1);
+                    const wailFreq = 680 + Math.sin(t * 4.2) * 260;
+                    this.sirenOsc.frequency.setTargetAtTime(wailFreq, now, 0.05);
+                } else {
+                    this.sirenGain.gain.setTargetAtTime(0, now, 0.1);
+                }
+            }
+
+            playGunshot(type = 'pistol', slowMo = false) {
+                if (!this.ctx || !this.enabled) return;
+                const now = this.ctx.currentTime;
+
+                // Noise burst
+                const src = this.ctx.createBufferSource();
+                src.buffer = this.noiseBuffer;
+                if (slowMo) src.playbackRate.value = 0.45;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                const baseFreq = type === 'shotgun' ? 900 : (type === 'sniper' ? 2800 : (type === 'smg' ? 2200 : 1800));
+                filter.frequency.setValueAtTime(slowMo ? baseFreq * 0.5 : baseFreq, now);
+                filter.frequency.exponentialRampToValueAtTime(160, now + (slowMo ? 0.45 : 0.18));
+
+                const gain = this.ctx.createGain();
+                const vol = type === 'shotgun' ? 0.65 : (type === 'sniper' ? 0.75 : 0.42);
+                gain.gain.setValueAtTime(vol, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (slowMo ? 0.5 : 0.2));
+
+                src.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                src.start(now);
+                src.stop(now + (slowMo ? 0.55 : 0.22));
+
+                // Low punch oscillator
+                const osc = this.ctx.createOscillator();
+                const oscGain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(type === 'shotgun' ? 130 : 180, now);
+                osc.frequency.exponentialRampToValueAtTime(35, now + (slowMo ? 0.25 : 0.09));
+                oscGain.gain.setValueAtTime(vol * 0.8, now);
+                oscGain.gain.exponentialRampToValueAtTime(0.001, now + (slowMo ? 0.26 : 0.1));
+                osc.connect(oscGain);
+                oscGain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + (slowMo ? 0.28 : 0.12));
+            }
+
+            playExplosion() {
+                if (!this.ctx || !this.enabled) return;
+                const now = this.ctx.currentTime;
+
+                const src = this.ctx.createBufferSource();
+                src.buffer = this.noiseBuffer;
+                src.playbackRate.value = 0.35;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, now);
+                filter.frequency.exponentialRampToValueAtTime(60, now + 2.2);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(1.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 2.4);
+
+                src.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                src.start(now);
+                src.stop(now + 2.5);
+
+                // Sub-bass boom
+                const sub = this.ctx.createOscillator();
+                const subGain = this.ctx.createGain();
+                sub.type = 'sine';
+                sub.frequency.setValueAtTime(95, now);
+                sub.frequency.exponentialRampToValueAtTime(22, now + 1.5);
+                subGain.gain.setValueAtTime(0.9, now);
+                subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+                sub.connect(subGain);
+                subGain.connect(this.ctx.destination);
+                sub.start(now);
+                sub.stop(now + 1.65);
+            }
+
+            playTireScreech() {
+                if (!this.ctx || !this.enabled) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(1150, now);
+                osc.frequency.linearRampToValueAtTime(920, now + 0.6);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.75);
+            }
+
+            playGlassShatter() {
+                if (!this.ctx || !this.enabled) return;
+                const now = this.ctx.currentTime;
+                for (let i = 0; i < 6; i++) {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(2400 + Math.random() * 2800, now + i * 0.025);
+                    gain.gain.setValueAtTime(0.09, now + i * 0.025);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.025 + 0.12);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + i * 0.025);
+                    osc.stop(now + i * 0.025 + 0.14);
+                }
+            }
+        }
+
+        const sound = new ProceduralSoundEngine();
+
+        const ACTS = [
+            { start: 0, end: 12, code: 'ACT I • 00:00 - 00:12', title: '第一幕：暗夜对峙 (The Standoff)', color: '#ef4444' },
+            { start: 12, end: 25, code: 'ACT II • 00:12 - 00:25', title: '第二幕：擦枪走火 (First Blood & Cover)', color: '#f59e0b' },
+            { start: 25, end: 40, code: 'ACT III • 00:25 - 00:40', title: '第三幕：火力压制与侧翼包抄 (Flanking & Bullet-Time)', color: '#06b6d4' },
+            { start: 40, end: 52, code: 'ACT IV • 00:40 - 00:52', title: '第四幕：爆破高潮 (Explosive Climax)', color: '#f97316' },
+            { start: 52, end: 60, code: 'ACT V • 00:52 - 01:00', title: '第五幕：警笛逼近与残局 (Aftermath & Sirens)', color: '#3b82f6' }
+        ];
+
+        // Pre-generate deterministic scripted combat events so timeline scrubbing is 100% accurate and repeatable
+        const SCRIPTED_SHOTS = [];
+        function buildCombatScript() {
+            let idCounter = 1;
+            const addShot = (t, shooterId, fromX, fromY, toX, toY, weapon, impactType, lethalTarget = null) => {
+                SCRIPTED_SHOTS.push({
+                    id: idCounter++,
+                    t, shooterId, fromX, fromY, toX, toY, weapon, impactType, lethalTarget
+                });
+            };
+
+            // Act II: 12.0s Sniper / First Blood shatters Red Sedan window & hits Red Enforcer (r3)
+            addShot(12.05, 'b3', 1390, 705, 520, 745, 'sniper', 'glass', null);
+            addShot(12.35, 'r1', 640, 735, 1310, 755, 'pistol', 'spark', null);
+            addShot(12.60, 'b1', 1270, 735, 580, 760, 'smg', 'spark', null);
+
+            // Intense suppressive fire 13.5s - 24.5s
+            for (let t = 13.5; t < 24.6; t += 0.28) {
+                const seed = Math.round(t * 100);
+                const isRed = seededRandom(seed) > 0.48;
+                if (isRed) {
+                    const shooter = seededRandom(seed + 1) > 0.5 ? 'r1' : 'r2';
+                    const sy = shooter === 'r1' ? 740 : 715;
+                    const sx = shooter === 'r1' ? 545 : 375;
+                    const ty = 710 + seededRandom(seed + 2) * 95;
+                    const tx = 1260 + seededRandom(seed + 3) * 280;
+                    addShot(t, shooter, sx, sy, tx, ty, shooter === 'r2' ? 'shotgun' : 'smg', 'spark', (t > 19.2 && t < 19.5) ? 'r3' : null);
+                } else {
+                    const shooter = seededRandom(seed + 4) > 0.4 ? 'b1' : 'b2';
+                    const sy = shooter === 'b1' ? 740 : 720;
+                    const sx = shooter === 'b1' ? 1320 : 1490;
+                    const ty = 715 + seededRandom(seed + 5) * 90;
+                    const tx = 380 + seededRandom(seed + 6) * 240;
+                    addShot(t, shooter, sx, sy, tx, ty, 'smg', 'spark', null);
+                }
+            }
+            // Specific hit at 19.4s on r3
+            addShot(19.40, 'b3', 1530, 710, 685, 735, 'sniper', 'blood', 'r3');
+
+            // Act III: 25s - 40s (Reinforcement van arrives at 26.5s, heavy fire, Bullet-Time 32s-36s)
+            for (let t = 25.4; t < 31.8; t += 0.22) {
+                const seed = Math.round(t * 100);
+                const isRed = seededRandom(seed) > 0.45;
+                if (isRed) {
+                    const shooter = seededRandom(seed + 2) > 0.5 ? 'r4' : 'r1';
+                    const sx = shooter === 'r4' ? 310 : 545;
+                    const sy = shooter === 'r4' ? 720 : 740;
+                    addShot(t, shooter, sx, sy, 1280 + seededRandom(seed + 3) * 260, 710 + seededRandom(seed + 4) * 90, 'smg', 'spark');
+                } else {
+                    addShot(t, 'b2', 1420, 725, 420 + seededRandom(seed + 5) * 220, 720 + seededRandom(seed + 6) * 80, 'smg', 'spark');
+                }
+            }
+
+            // Bullet-Time Slow-Mo Sequence (32.0s to 36.0s) - Red Leader (r1) vaults & dodges mid-air tracer rounds
+            addShot(32.15, 'b1', 1290, 730, 650, 680, 'sniper', 'spark');
+            addShot(32.55, 'b2', 1440, 715, 700, 650, 'smg', 'spark');
+            addShot(32.95, 'r1', 790, 660, 1440, 725, 'pistol', 'blood', 'b2');
+            addShot(33.40, 'b3', 1550, 705, 810, 695, 'sniper', 'spark');
+            addShot(33.85, 'r1', 860, 685, 1295, 735, 'pistol', 'spark');
+            addShot(34.30, 'r2', 410, 715, 1340, 750, 'shotgun', 'spark');
+            addShot(34.85, 'b1', 1280, 740, 890, 745, 'smg', 'spark');
+            addShot(35.30, 'r4', 350, 720, 1545, 715, 'smg', 'blood', 'b3');
+
+            // 36.2s - 40.0s Post-bullet-time intense exchange
+            for (let t = 36.2; t < 40.0; t += 0.24) {
+                const seed = Math.round(t * 100);
+                if (seededRandom(seed) > 0.5) {
+                    addShot(t, 'r1', 920, 745, 1310, 740 + seededRandom(seed + 1) * 50, 'pistol', 'spark');
+                } else {
+                    addShot(t, 'b1', 1280, 740, 910, 750 + seededRandom(seed + 2) * 40, 'smg', 'spark');
+                }
+            }
+
+            // Act IV: 40.0s - 52.0s (41.2s Grenade/Fuel Tank Explosion on Blue SUV, close-quarters firefight amidst flames)
+            for (let t = 42.0; t < 51.2; t += 0.26) {
+                const seed = Math.round(t * 100);
+                if (seededRandom(seed) > 0.42) {
+                    const shooter = seededRandom(seed + 1) > 0.5 ? 'r1' : 'r2';
+                    const sx = shooter === 'r1' ? 940 : 620;
+                    addShot(t, shooter, sx, 740, 1180 + seededRandom(seed + 2) * 220, 730 + seededRandom(seed + 3) * 60, shooter === 'r2' ? 'shotgun' : 'pistol', 'spark');
+                } else {
+                    addShot(t, 'b1', 1180, 745, 620 + seededRandom(seed + 4) * 320, 735 + seededRandom(seed + 5) * 55, 'smg', 'spark');
+                }
+            }
+            // Final decisive shots at 48.5s and 50.8s
+            addShot(48.50, 'b1', 1170, 740, 630, 735, 'smg', 'blood', 'r2');
+            addShot(50.85, 'r1', 960, 735, 1170, 740, 'pistol', 'blood', 'b1');
+
+            SCRIPTED_SHOTS.sort((a, b) => a.t - b.t);
+        }
+        buildCombatScript();
+
+        // Continuous & Event-driven visual particle pools
+        const rainDrops = [];
+        const splashes = [];
+        const shellCasings = [];
+        const sparks = [];
+        const smokePuffs = [];
+        const fireParticles = [];
+        const glassShards = [];
+        const activeTracers = [];
+        const shockwaves = [];
+
+        // Initialize 320 rain streaks
+        for (let i = 0; i < 320; i++) {
+            rainDrops.push({
+                x: Math.random() * (W + 400) - 200,
+                y: Math.random() * H,
+                len: 22 + Math.random() * 28,
+                speed: 1350 + Math.random() * 650,
+                alpha: 0.15 + Math.random() * 0.35,
+                thickness: 1 + Math.random() * 1.2
+            });
+        }
+
+        // Pre-seed ambient manhole steam emitters
+        const steamVents = [
+            { x: 280, y: 830 },
+            { x: 1050, y: 855 },
+            { x: 1680, y: 825 }
+        ];
+
+        let lastProcessedTime = 0;
+        let screenShake = 0;
+        let redSedanGlassBroken = false;
+        let blueSuvExploded = false;
+
+        function resetDynamicEffects(targetTime) {
+            shellCasings.length = 0;
+            sparks.length = 0;
+            glassShards.length = 0;
+            activeTracers.length = 0;
+            shockwaves.length = 0;
+            fireParticles.length = 0;
+            smokePuffs.length = 0;
+            screenShake = 0;
+
+            redSedanGlassBroken = targetTime >= 12.05;
+            blueSuvExploded = targetTime >= 41.2;
+
+            // Pre-populate persistent shell casings on ground up to targetTime
+            for (const shot of SCRIPTED_SHOTS) {
+                if (shot.t <= targetTime) {
+                    const dir = shot.fromX < shot.toX ? -1 : 1;
+                    const s = shot.id * 17.3;
+                    shellCasings.push({
+                        x: shot.fromX + dir * (25 + seededRandom(s) * 45),
+                        y: 805 + seededRandom(s + 1) * 55,
+                        vx: 0,
+                        vy: 0,
+                        rot: seededRandom(s + 2) * Math.PI * 2,
+                        vRot: 0,
+                        groundY: 805 + seededRandom(s + 1) * 55,
+                        settled: true,
+                        color: shot.weapon === 'shotgun' ? '#dc2626' : '#fbbf24'
+                    });
+                }
+            }
+        }
+
+        function triggerShotVisuals(shot, isSlowMo) {
+            const dir = shot.fromX < shot.toX ? 1 : -1;
+
+            // 1. Active Bullet Tracer
+            activeTracers.push({
+                x0: shot.fromX,
+                y0: shot.fromY,
+                x1: shot.toX,
+                y1: shot.toY,
+                progress: 0,
+                speed: isSlowMo ? 1.35 : 7.5,
+                weapon: shot.weapon,
+                color: shot.shooterId.startsWith('r') ? '#fca5a5' : '#93c5fd'
+            });
+
+            // 2. Ejecting Brass Shell Casing
+            const groundY = 800 + Math.random() * 65;
+            shellCasings.push({
+                x: shot.fromX - dir * 12,
+                y: shot.fromY - 6,
+                vx: -dir * (65 + Math.random() * 95),
+                vy: -160 - Math.random() * 110,
+                rot: Math.random() * Math.PI,
+                vRot: (Math.random() - 0.5) * 28,
+                groundY,
+                settled: false,
+                color: shot.weapon === 'shotgun' ? '#ef4444' : '#fbbf24'
+            });
+
+            // 3. Muzzle Smoke Puff
+            smokePuffs.push({
+                x: shot.fromX + dir * 24,
+                y: shot.fromY - 4,
+                vx: dir * (25 + Math.random() * 35),
+                vy: -25 - Math.random() * 20,
+                r: 8,
+                maxR: 38 + Math.random() * 25,
+                alpha: 0.45,
+                color: '180, 190, 205'
+            });
+
+            // 4. Impact Sparks / Glass / Blood
+            const sparkCount = shot.weapon === 'shotgun' ? 18 : 10;
+            for (let i = 0; i < sparkCount; i++) {
+                const angle = Math.atan2(shot.fromY - shot.toY, shot.fromX - shot.toX) + (Math.random() - 0.5) * 1.6;
+                const spd = 120 + Math.random() * 360;
+                const isBlood = shot.impactType === 'blood';
+                sparks.push({
+                    x: shot.toX,
+                    y: shot.toY,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd - 60,
+                    life: 1.0,
+                    decay: 1.8 + Math.random() * 2.2,
+                    color: isBlood ? '#dc2626' : (Math.random() > 0.3 ? '#fde047' : '#fb923c'),
+                    size: isBlood ? 3.5 : 2.2
+                });
+            }
+
+            // Glass shatter on first sniper shot
+            if (shot.impactType === 'glass') {
+                redSedanGlassBroken = true;
+                sound.playGlassShatter();
+                for (let i = 0; i < 36; i++) {
+                    glassShards.push({
+                        x: shot.toX + (Math.random() - 0.5) * 45,
+                        y: shot.toY + (Math.random() - 0.5) * 25,
+                        vx: (Math.random() - 0.5) * 260 - 60,
+                        vy: -80 - Math.random() * 180,
+                        rot: Math.random() * Math.PI,
+                        size: 3 + Math.random() * 5,
+                        groundY: 810 + Math.random() * 45
+                    });
+                }
+            }
+
+            // Shockwave ring in Bullet-Time
+            if (isSlowMo) {
+                shockwaves.push({
+                    x: shot.fromX + dir * 20,
+                    y: shot.fromY,
+                    r: 5,
+                    maxR: 130,
+                    alpha: 0.65
+                });
+            }
+
+            screenShake = Math.max(screenShake, shot.weapon === 'shotgun' || shot.weapon === 'sniper' ? 9 : 4.5);
+            sound.playGunshot(shot.weapon, isSlowMo);
+        }
+
+        function triggerBigExplosion(x, y) {
+            blueSuvExploded = true;
+            screenShake = 36;
+            sound.playExplosion();
+
+            shockwaves.push({ x, y, r: 15, maxR: 680, alpha: 0.95 });
+            shockwaves.push({ x, y, r: 5, maxR: 420, alpha: 0.75 });
+
+            for (let i = 0; i < 85; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const spd = 90 + Math.random() * 680;
+                sparks.push({
+                    x: x + (Math.random() - 0.5) * 60,
+                    y: y + (Math.random() - 0.5) * 40,
+                    vx: Math.cos(angle) * spd,
+                    vy: Math.sin(angle) * spd - 180,
+                    life: 1.0,
+                    decay: 0.55 + Math.random() * 1.1,
+                    color: Math.random() > 0.4 ? '#fef08a' : '#f97316',
+                    size: 3 + Math.random() * 4
+                });
+            }
+
+            for (let i = 0; i < 32; i++) {
+                smokePuffs.push({
+                    x: x + (Math.random() - 0.5) * 140,
+                    y: y + (Math.random() - 0.5) * 60,
+                    vx: (Math.random() - 0.5) * 120,
+                    vy: -60 - Math.random() * 90,
+                    r: 25 + Math.random() * 30,
+                    maxR: 120 + Math.random() * 80,
+                    alpha: 0.75,
+                    color: '30, 32, 38'
+                });
+            }
+        }
+
+        function getCameraState(t) {
+            let zoom = 1.0;
+            let focusX = W / 2;
+            let focusY = H / 2;
+            let label = '1.00x [WIDE ALLEY]';
+
+            if (t < 4.5) {
+                // Slow cinematic crane descend into alley
+                const p = smoothstep(0, 4.5, t);
+                zoom = lerp(1.18, 1.02, p);
+                focusY = lerp(H * 0.42, H * 0.5, p);
+                label = `${zoom.toFixed(2)}x [CRANE ESTABLISHING]`;
+            } else if (t < 8.5) {
+                // Close pan on Red Syndicate stepping out
+                const p = smoothstep(4.5, 6.0, t);
+                zoom = lerp(1.02, 1.38, p);
+                focusX = lerp(W / 2, 620, p);
+                focusY = lerp(H / 2, 700, p);
+                label = `${zoom.toFixed(2)}x [RED SYNDICATE]`;
+            } else if (t < 11.8) {
+                // Pan across to Blue Tactical Crew & Standoff zoom
+                const p = smoothstep(8.5, 10.5, t);
+                zoom = lerp(1.38, 1.25, p);
+                focusX = lerp(620, 1180, p);
+                focusY = 705;
+                if (t > 10.8) {
+                    const p2 = smoothstep(10.8, 11.8, t);
+                    zoom = lerp(1.25, 1.06, p2);
+                    focusX = lerp(1180, W / 2, p2);
+                }
+                label = `${zoom.toFixed(2)}x [STANDOFF PAN]`;
+            } else if (t < 25.0) {
+                // Act II dynamic combat tracking
+                zoom = 1.08 + Math.sin(t * 0.9) * 0.04;
+                focusX = W / 2 + Math.sin(t * 0.65) * 90;
+                focusY = 550;
+                label = `${zoom.toFixed(2)}x [COMBAT TRACKING]`;
+            } else if (t < 31.8) {
+                // Act III Reinforcement van arrival & flanking
+                const p = smoothstep(25.0, 27.5, t);
+                zoom = lerp(1.08, 1.15, p);
+                focusX = lerp(W / 2, 580, Math.sin(clamp((t - 25) / 4, 0, 1) * Math.PI));
+                focusY = 560;
+                label = `${zoom.toFixed(2)}x [FLANKING CAM]`;
+            } else if (t >= 31.8 && t <= 36.2) {
+                // Bullet-Time Dramatic Zoom on vaulting Red Leader (r1)
+                const enter = smoothstep(31.8, 32.4, t);
+                const exit = smoothstep(35.5, 36.2, t);
+                const active = enter * (1 - exit);
+                zoom = lerp(1.12, 1.68, active);
+                const r1X = lerp(600, 910, clamp((t - 32.0) / 3.8, 0, 1));
+                focusX = lerp(W / 2, r1X + 90, active);
+                focusY = lerp(550, 675, active);
+                label = `${zoom.toFixed(2)}x [BULLET-TIME 0.25x]`;
+            } else if (t < 41.0) {
+                zoom = 1.14;
+                focusX = 1040;
+                focusY = 560;
+                label = `1.14x [PRE-CLIMAX]`;
+            } else if (t < 52.0) {
+                // Act IV Explosive Climax
+                const p = smoothstep(41.0, 42.5, t);
+                zoom = lerp(1.14, 1.05, p);
+                focusX = lerp(1040, 1080, p);
+                focusY = 545;
+                label = `${zoom.toFixed(2)}x [INFERNO WIDE]`;
+            } else {
+                // Act V Slow pull-back as police sirens wash over the alley
+                const p = smoothstep(52.0, 60.0, t);
+                zoom = lerp(1.05, 0.94, p);
+                focusX = lerp(1080, W / 2, p);
+                focusY = lerp(545, 510, p);
+                label = `${zoom.toFixed(2)}x [OUTRO CRANE]`;
+            }
+
+            return { zoom, focusX, focusY, label };
+        }
+
+        function drawEnvironment(t) {
+            // 1. Night Sky Gradient
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, 760);
+            skyGrad.addColorStop(0, '#04060d');
+            skyGrad.addColorStop(0.55, '#0b1120');
+            skyGrad.addColorStop(1, '#151d30');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, W, 760);
+
+            // Police Siren Sky Wash in Act V (51s - 60s)
+            if (t >= 51.0) {
+                const sirenPower = clamp((t - 51.0) / 3.5, 0, 1);
+                const pulse = Math.sin(t * 14);
+                ctx.save();
+                const policeGrad = ctx.createRadialGradient(
+                    pulse > 0 ? 450 : 1470, 320, 40,
+                    pulse > 0 ? 450 : 1470, 420, 950
+                );
+                if (pulse > 0) {
+                    policeGrad.addColorStop(0, `rgba(239, 68, 68, ${0.28 * sirenPower})`);
+                    policeGrad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+                } else {
+                    policeGrad.addColorStop(0, `rgba(59, 130, 246, ${0.32 * sirenPower})`);
+                    policeGrad.addColorStop(1, 'rgba(59, 130, 246, 0)');
+                }
+                ctx.fillStyle = policeGrad;
+                ctx.fillRect(0, 0, W, H);
+                ctx.restore();
+            }
+
+            // 2. Distant City Skyline Silhouettes & Windows
+            const skylineBuildings = [
+                { x: 60, w: 190, h: 520, seed: 1 },
+                { x: 230, w: 160, h: 610, seed: 2 },
+                { x: 380, w: 220, h: 480, seed: 3 },
+                { x: 620, w: 250, h: 660, seed: 4 },
+                { x: 890, w: 190, h: 540, seed: 5 },
+                { x: 1100, w: 240, h: 630, seed: 6 },
+                { x: 1360, w: 200, h: 500, seed: 7 },
+                { x: 1580, w: 260, h: 590, seed: 8 }
+            ];
+
+            for (const b of skylineBuildings) {
+                const by = 740 - b.h;
+                ctx.fillStyle = '#070a12';
+                ctx.fillRect(b.x, by, b.w, b.h);
+                ctx.strokeStyle = '#131c2e';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(b.x, by, b.w, b.h);
+
+                // Distant lit windows
+                for (let wy = by + 24; wy < 700; wy += 28) {
+                    for (let wx = b.x + 16; wx < b.x + b.w - 20; wx += 22) {
+                        const r = seededRandom(wx * 13 + wy * 7 + b.seed);
+                        if (r > 0.68) {
+                            ctx.fillStyle = r > 0.88 ? 'rgba(56, 189, 248, 0.25)' : 'rgba(251, 191, 36, 0.18)';
+                            ctx.fillRect(wx, wy, 10, 14);
+                        }
+                    }
+                }
+            }
+
+            // 3. Foreground Alley Brick Walls & Architecture
+            // Left Alley Building
+            ctx.fillStyle = '#0e131f';
+            ctx.fillRect(0, 120, 460, 630);
+            ctx.fillStyle = '#151c2c';
+            ctx.fillRect(460, 220, 210, 530);
+
+            // Right Alley Building
+            ctx.fillStyle = '#111726';
+            ctx.fillRect(1260, 190, 240, 560);
+            ctx.fillStyle = '#0c101a';
+            ctx.fillRect(1500, 90, 420, 660);
+
+            // Center Alley Recessed Overpass / Fire Escapes
+            ctx.fillStyle = '#0a0e17';
+            ctx.fillRect(670, 370, 590, 380);
+
+            // Overhead Steel Bridge / Pipes across alley
+            ctx.fillStyle = '#07090f';
+            ctx.fillRect(450, 260, 820, 28);
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            for (let px = 470; px < 1260; px += 45) {
+                ctx.beginPath();
+                ctx.moveTo(px, 260);
+                ctx.lineTo(px + 25, 288);
+                ctx.stroke();
+            }
+
+            // 4. Flickering Neon Signs ("夜总会", "当铺", "24H")
+            drawNeonSign(165, 290, 210, 74, '夜总会', 'CLUB NOIR', '#ec4899', '#f43f5e', t, 1.0);
+            drawNeonSign(505, 360, 130, 56, '当 铺', 'PAWN', '#eab308', '#f59e0b', t, 2.7);
+            drawNeonSign(1310, 330, 150, 62, '24H 便利', 'OPEN', '#06b6d4', '#3b82f6', t, 4.1);
+            drawNeonSign(1580, 250, 220, 78, '九龙机修', 'GARAGE', '#ef4444', '#f97316', t, 5.3);
+
+            // 5. Street Lamps with Volumetric Light Cones
+            const lamps = [340, 760, 1180, 1600];
+            for (const lx of lamps) {
+                // Lamp post
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(lx - 4, 430, 8, 320);
+                ctx.fillRect(lx - 4, 430, 38, 6);
+                // Glowing fixture
+                ctx.fillStyle = '#fef3c7';
+                ctx.fillRect(lx + 22, 434, 18, 6);
+
+                // Volumetric cone
+                ctx.save();
+                const coneGrad = ctx.createLinearGradient(lx + 30, 440, lx + 30, 790);
+                coneGrad.addColorStop(0, 'rgba(253, 230, 138, 0.22)');
+                coneGrad.addColorStop(0.6, 'rgba(251, 191, 36, 0.06)');
+                coneGrad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+                ctx.fillStyle = coneGrad;
+                ctx.beginPath();
+                ctx.moveTo(lx + 20, 440);
+                ctx.lineTo(lx + 40, 440);
+                ctx.lineTo(lx + 190, 790);
+                ctx.lineTo(lx - 130, 790);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 6. Wet Asphalt Street & Sidewalk Curb
+            const roadGrad = ctx.createLinearGradient(0, 740, 0, H);
+            roadGrad.addColorStop(0, '#0b0f17');
+            roadGrad.addColorStop(0.25, '#090d14');
+            roadGrad.addColorStop(1, '#040609');
+            ctx.fillStyle = roadGrad;
+            ctx.fillRect(0, 740, W, H - 740);
+
+            // Sidewalk curb line
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 740, W, 8);
+
+            // 7. Neon & Fire Reflections on Wet Pavement
+            ctx.save();
+            ctx.globalCompositeOperation = 'screen';
+            const reflections = [
+                { x: 260, w: 220, color: '236, 72, 153', alpha: 0.14 },
+                { x: 560, w: 140, color: '234, 179, 8', alpha: 0.11 },
+                { x: 1380, w: 170, color: '6, 182, 212', alpha: 0.14 },
+                { x: 1680, w: 230, color: '239, 68, 68', alpha: 0.13 }
+            ];
+            if (blueSuvExploded) {
+                reflections.push({ x: 1380, w: 420, color: '249, 115, 22', alpha: 0.28 + Math.sin(t * 18) * 0.05 });
+            }
+            for (const ref of reflections) {
+                const refGrad = ctx.createRadialGradient(ref.x, 830, 10, ref.x, 860, ref.w);
+                refGrad.addColorStop(0, `rgba(${ref.color}, ${ref.alpha})`);
+                refGrad.addColorStop(1, `rgba(${ref.color}, 0)`);
+                ctx.fillStyle = refGrad;
+                ctx.fillRect(ref.x - ref.w, 750, ref.w * 2, 260);
+            }
+
+            // Horizontal wet puddle ripple streaks
+            for (let py = 765; py < 980; py += 18) {
+                const offset = Math.sin(py * 0.3 + t * 3) * 14;
+                ctx.fillStyle = 'rgba(148, 163, 184, 0.035)';
+                ctx.fillRect(180 + offset, py, W - 360, 2);
+            }
+            ctx.restore();
+
+            // 8. Static Alley Props (Dumpsters & Concrete Barriers)
+            // Left Green/Teal Dumpster
+            drawDumpster(290, 680);
+            // Center-Left & Center-Right Concrete Jersey Barriers
+            drawConcreteBarrier(820, 735);
+            drawConcreteBarrier(1060, 745);
+        }
+
+        function drawNeonSign(x, y, w, h, mainText, subText, colorHex, glowHex, t, seed) {
+            // Flicker logic
+            const flickerVal = Math.sin(t * 23 + seed * 7) * Math.cos(t * 11 + seed);
+            const isOn = flickerVal > -0.78;
+            const alpha = isOn ? (0.85 + 0.15 * Math.sin(t * 8 + seed)) : 0.18;
+
+            ctx.save();
+            // Backing box
+            ctx.fillStyle = '#090c14';
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 3;
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeRect(x, y, w, h);
+
+            // Outer neon border
+            ctx.globalAlpha = alpha;
+            ctx.shadowColor = glowHex;
+            ctx.shadowBlur = isOn ? 22 : 0;
+            ctx.strokeStyle = colorHex;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x + 6, y + 6, w - 12, h - 12);
+
+            // Chinese Title
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 28px "Noto Sans SC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(mainText, x + w / 2, y + 38);
+
+            // Subtext
+            ctx.font = '700 11px "JetBrains Mono", monospace';
+            ctx.fillStyle = colorHex;
+            ctx.fillText(subText, x + w / 2, y + 56);
+            ctx.restore();
+        }
+
+        function drawDumpster(x, y) {
+            ctx.save();
+            ctx.fillStyle = '#112a2e';
+            ctx.strokeStyle = '#1f4449';
+            ctx.lineWidth = 2;
+            ctx.fillRect(x, y, 135, 85);
+            ctx.strokeRect(x, y, 135, 85);
+            // Lid
+            ctx.fillStyle = '#0b1c1f';
+            ctx.fillRect(x - 4, y - 10, 143, 12);
+            // Ribs
+            ctx.fillStyle = '#0d2226';
+            ctx.fillRect(x + 28, y + 8, 10, 70);
+            ctx.fillRect(x + 64, y + 8, 10, 70);
+            ctx.fillRect(x + 100, y + 8, 10, 70);
+            ctx.restore();
+        }
+
+        function drawConcreteBarrier(x, y) {
+            ctx.save();
+            ctx.fillStyle = '#334155';
+            ctx.beginPath();
+            ctx.moveTo(x, y + 52);
+            ctx.lineTo(x + 12, y);
+            ctx.lineTo(x + 108, y);
+            ctx.lineTo(x + 120, y + 52);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Hazard stripes
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(x + 20, y + 10, 22, 6);
+            ctx.fillRect(x + 76, y + 10, 22, 6);
+            ctx.restore();
+        }
+
+        function drawVehicle(x, y, dir, style, isGlassBroken, isBurning, t) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (dir < 0) ctx.scale(-1, 1);
+
+            // Drop shadow on wet asphalt
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+            ctx.beginPath();
+            ctx.ellipse(0, 52, 165, 18, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Car Body Palette
+            let bodyColor = '#1e1b24';
+            let trimColor = '#dc2626';
+            if (style === 'blueSuv') {
+                bodyColor = isBurning ? '#1c1917' : '#0f172a';
+                trimColor = isBurning ? '#ea580c' : '#3b82f6';
+            } else if (style === 'van') {
+                bodyColor = '#271216';
+                trimColor = '#f43f5e';
+            }
+
+            // Lower Chassis
+            ctx.fillStyle = bodyColor;
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(-155, -8, 310, 52, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            // Cabin / Roofline
+            ctx.beginPath();
+            if (style === 'sedan') {
+                ctx.moveTo(-110, -8);
+                ctx.lineTo(-65, -48);
+                ctx.lineTo(45, -48);
+                ctx.lineTo(95, -8);
+            } else if (style === 'blueSuv') {
+                ctx.moveTo(-135, -8);
+                ctx.lineTo(-115, -56);
+                ctx.lineTo(55, -56);
+                ctx.lineTo(95, -8);
+            } else {
+                // Reinforcement Van
+                ctx.moveTo(-145, -8);
+                ctx.lineTo(-140, -68);
+                ctx.lineTo(70, -68);
+                ctx.lineTo(110, -8);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Accent Neon Trim Stripe
+            ctx.fillStyle = trimColor;
+            ctx.fillRect(-145, 14, 290, 4);
+
+            // Windows
+            if (isBurning) {
+                ctx.fillStyle = 'rgba(249, 115, 22, 0.35)';
+            } else if (isGlassBroken) {
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            } else {
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.22)';
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(-58, -42);
+            ctx.lineTo(38, -42);
+            ctx.lineTo(78, -10);
+            ctx.lineTo(-88, -10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Jagged broken glass teeth if shattered
+            if (isGlassBroken && !isBurning) {
+                ctx.strokeStyle = '#bae6fd';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(-55, -42);
+                ctx.lineTo(-48, -32);
+                ctx.lineTo(-39, -42);
+                ctx.lineTo(-25, -28);
+                ctx.lineTo(-15, -42);
+                ctx.stroke();
+            }
+
+            // Wheels
+            for (const wx of [-98, 98]) {
+                ctx.fillStyle = '#090b10';
+                ctx.beginPath();
+                ctx.arc(wx, 40, 24, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(wx, 40, 13, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Volumetric Headlight Cone & Taillight Glow
+            if (!isBurning) {
+                // Headlights (front is +x in local space)
+                ctx.fillStyle = '#fef08a';
+                ctx.fillRect(148, 2, 8, 14);
+
+                const beamGrad = ctx.createLinearGradient(155, 8, 520, 40);
+                beamGrad.addColorStop(0, 'rgba(254, 240, 138, 0.36)');
+                beamGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.12)');
+                beamGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+                ctx.fillStyle = beamGrad;
+                ctx.beginPath();
+                ctx.moveTo(155, 2);
+                ctx.lineTo(540, -45);
+                ctx.lineTo(540, 95);
+                ctx.lineTo(155, 16);
+                ctx.closePath();
+                ctx.fill();
+
+                // Taillights
+                ctx.fillStyle = '#ef4444';
+                ctx.shadowColor = '#ef4444';
+                ctx.shadowBlur = 15;
+                ctx.fillRect(-156, 2, 6, 14);
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.restore();
+        }
+
+        const CHARACTERS = [
+            { id: 'r1', faction: 'red', name: '赤帮首领 (Leader)', coat: true, weapon: 'pistol', accent: '#ef4444' },
+            { id: 'r2', faction: 'red', name: '赤帮重装 (Shotgunner)', coat: false, weapon: 'shotgun', accent: '#f97316' },
+            { id: 'r3', faction: 'red', name: '赤帮刀手 (Enforcer)', coat: false, weapon: 'smg', accent: '#f43f5e' },
+            { id: 'r4', faction: 'red', name: '赤帮支援 (Flanker)', coat: true, weapon: 'smg', accent: '#ef4444' },
+            { id: 'b1', faction: 'blue', name: '蓝队队长 (Commander)', coat: true, weapon: 'smg', accent: '#3b82f6' },
+            { id: 'b2', faction: 'blue', name: '蓝队突击 (Pointman)', coat: false, weapon: 'smg', accent: '#06b6d4' },
+            { id: 'b3', faction: 'blue', name: '蓝队狙击 (Marksman)', coat: false, weapon: 'sniper', accent: '#38bdf8' }
+        ];
+
+        function getCharacterState(char, t) {
+            let x = 0, y = 785, dir = 1, pose = 'stand', aimAngle = 0, visible = true, coatFlow = 0;
+
+            // Check if character was just firing for recoil
+            let recoil = 0;
+            let muzzleFlash = false;
+            for (const s of SCRIPTED_SHOTS) {
+                if (s.shooterId === char.id) {
+                    const dt = t - s.t;
+                    if (dt >= 0 && dt < 0.14) {
+                        recoil = 1 - (dt / 0.14);
+                        if (dt < 0.06) muzzleFlash = true;
+                    }
+                }
+            }
+
+            // Individual 60s Choreography
+            switch (char.id) {
+                case 'r1': // Red Syndicate Trench-coat Leader (Survives whole 60s)
+                    dir = 1;
+                    if (t < 3.2) { visible = false; }
+                    else if (t < 7.5) {
+                        x = lerp(490, 640, smoothstep(3.2, 7.5, t));
+                        pose = t < 7.2 ? 'walk' : 'stand';
+                    } else if (t < 12.1) {
+                        x = 640; pose = 'aimStand';
+                    } else if (t < 13.6) {
+                        x = lerp(640, 545, smoothstep(12.1, 13.6, t));
+                        pose = 'run';
+                    } else if (t < 32.0) {
+                        x = 545;
+                        pose = (Math.sin(t * 2.8) > -0.2) ? 'aimCrouch' : 'crouchCover';
+                    } else if (t <= 36.2) {
+                        // Bullet-time epic vault & slow-mo dive
+                        const p = clamp((t - 32.0) / 4.0, 0, 1);
+                        x = lerp(545, 920, p);
+                        y = 785 - Math.sin(p * Math.PI) * 115;
+                        pose = 'vaultDive';
+                        coatFlow = 1.0;
+                        aimAngle = 0.15;
+                    } else if (t < 52.0) {
+                        x = lerp(920, 960, smoothstep(36.2, 48.0, t));
+                        pose = (t > 40.5 && t < 42.0) ? 'crouchCover' : 'aimCrouch';
+                    } else {
+                        // Act V: Limps into shadow alley
+                        x = lerp(960, 740, smoothstep(52.5, 59.5, t));
+                        y = lerp(785, 755, smoothstep(52.5, 59.5, t));
+                        dir = -1;
+                        pose = 'limpWalk';
+                    }
+                    break;
+
+                case 'r2': // Red Heavy Shotgunner (Downed at 48.5s)
+                    dir = 1;
+                    if (t < 3.8) { visible = false; }
+                    else if (t < 8.0) {
+                        x = lerp(420, 560, smoothstep(3.8, 8.0, t));
+                        pose = t < 7.6 ? 'walk' : 'stand';
+                    } else if (t < 12.2) {
+                        x = 560; pose = 'aimStand';
+                    } else if (t < 14.0) {
+                        x = lerp(560, 375, smoothstep(12.2, 14.0, t));
+                        dir = -1; pose = 'run';
+                    } else if (t < 36.5) {
+                        x = 375; dir = 1;
+                        pose = (Math.sin(t * 2.2 + 1) > -0.3) ? 'aimCrouch' : 'crouchCover';
+                    } else if (t < 48.5) {
+                        x = lerp(375, 620, smoothstep(36.5, 41.0, t));
+                        pose = 'aimStand';
+                    } else {
+                        x = 620; pose = 'dead';
+                    }
+                    break;
+
+                case 'r3': // Red Enforcer (Hit at 19.4s)
+                    dir = 1;
+                    if (t < 4.2) { visible = false; }
+                    else if (t < 12.1) {
+                        x = lerp(520, 685, smoothstep(4.2, 8.2, t));
+                        pose = t < 8.2 ? 'walk' : 'aimStand';
+                    } else if (t < 19.4) {
+                        x = 685;
+                        pose = 'aimCrouch';
+                    } else {
+                        x = 670; pose = 'dead';
+                    }
+                    break;
+
+                case 'r4': // Red Reinforcement Flanker (Arrives in Van at 26.8s)
+                    dir = 1;
+                    if (t < 26.8) { visible = false; }
+                    else if (t < 29.0) {
+                        x = lerp(220, 340, smoothstep(26.8, 29.0, t));
+                        pose = 'run';
+                    } else if (t < 40.2) {
+                        x = 340; pose = 'aimCrouch';
+                    } else if (t < 41.3) {
+                        // Throws grenade toward Blue SUV at 40.2s - 41.2s
+                        x = 360; pose = 'throwGrenade';
+                    } else if (t < 53.0) {
+                        x = 360; pose = 'aimCrouch';
+                    } else {
+                        x = lerp(360, 140, smoothstep(53.0, 58.5, t));
+                        dir = -1; pose = 'run';
+                    }
+                    break;
+
+                case 'b1': // Blue Tactical Commander (Downed at 50.85s)
+                    dir = -1;
+                    if (t < 3.4) { visible = false; }
+                    else if (t < 8.5) {
+                        x = lerp(1420, 1270, smoothstep(3.4, 8.5, t));
+                        pose = t < 8.0 ? 'walk' : 'stand';
+                    } else if (t < 12.1) {
+                        x = 1270; pose = 'aimStand';
+                    } else if (t < 13.5) {
+                        x = lerp(1270, 1320, smoothstep(12.1, 13.5, t));
+                        pose = 'run';
+                    } else if (t < 41.2) {
+                        x = 1300;
+                        pose = (Math.sin(t * 3.1) > -0.25) ? 'aimCrouch' : 'crouchCover';
+                    } else if (t < 50.85) {
+                        // Knocked forward from SUV blast to barrier
+                        x = lerp(1300, 1170, smoothstep(41.2, 42.6, t));
+                        pose = 'aimCrouch';
+                    } else {
+                        x = 1170; pose = 'dead';
+                    }
+                    break;
+
+                case 'b2': // Blue Pointman (Downed in Bullet-Time at 32.95s)
+                    dir = -1;
+                    if (t < 4.0) { visible = false; }
+                    else if (t < 12.1) {
+                        x = lerp(1520, 1340, smoothstep(4.0, 8.8, t));
+                        pose = t < 8.5 ? 'walk' : 'aimStand';
+                    } else if (t < 32.95) {
+                        x = lerp(1340, 1440, smoothstep(12.1, 14.0, t));
+                        pose = 'aimStand';
+                    } else {
+                        x = 1445; pose = 'dead';
+                    }
+                    break;
+
+                case 'b3': // Blue Sniper Marksman (Downed at 35.3s)
+                    dir = -1;
+                    if (t < 4.5) { visible = false; }
+                    else if (t < 12.1) {
+                        x = 1390; pose = 'aimCrouch';
+                    } else if (t < 35.3) {
+                        x = lerp(1390, 1545, smoothstep(12.2, 14.5, t));
+                        pose = 'aimCrouch';
+                    } else {
+                        x = 1550; pose = 'dead';
+                    }
+                    break;
+            }
+
+            return { x, y, dir, pose, aimAngle, visible, recoil, muzzleFlash, coatFlow };
+        }
+
+        function drawArticulatedCharacter(char, state, t) {
+            if (!state.visible) return;
+
+            ctx.save();
+            ctx.translate(state.x, state.y);
+            ctx.scale(state.dir, 1);
+
+            const isDead = state.pose === 'dead';
+            const isCrouch = state.pose === 'aimCrouch' || state.pose === 'crouchCover';
+            const isVault = state.pose === 'vaultDive';
+            const isWalk = state.pose === 'walk' || state.pose === 'limpWalk';
+            const isRun = state.pose === 'run';
+
+            // Ground shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.beginPath();
+            ctx.ellipse(0, isVault ? 65 : 4, isDead ? 36 : 22, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (isDead) {
+                ctx.rotate(-Math.PI / 2.1);
+                ctx.translate(-8, -14);
+            } else if (isVault) {
+                ctx.rotate(0.42);
+            }
+
+            // Procedural Walk/Run Cycle Phase
+            const speedMult = isRun ? 14 : (state.pose === 'limpWalk' ? 4.5 : 7.5);
+            const cycle = (isWalk || isRun) ? Math.sin(t * speedMult) : 0;
+            const cycleCos = (isWalk || isRun) ? Math.cos(t * speedMult) : 0;
+
+            const hipY = isCrouch ? -28 : -44;
+            const shoulderY = hipY - (isCrouch ? 24 : 30);
+            const torsoLean = isCrouch ? 0.25 : (isRun ? 0.22 : (state.pose === 'limpWalk' ? 0.18 : 0.05));
+
+            // 1. Back Leg
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 7;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(0, hipY);
+            if (isCrouch) {
+                ctx.lineTo(-14, hipY + 14);
+                ctx.lineTo(-22, 0);
+            } else if (isVault) {
+                ctx.lineTo(-22, hipY + 12);
+                ctx.lineTo(-38, hipY + 22);
+            } else {
+                const kneeX = -cycle * 12;
+                const footX = -cycle * 20 - (cycleCos > 0 ? 4 : 0);
+                ctx.lineTo(kneeX, hipY + 22);
+                ctx.lineTo(footX, 0);
+            }
+            ctx.stroke();
+
+            // 2. Flowing Trench Coat Back Tail
+            if (char.coat && !isDead) {
+                ctx.fillStyle = char.faction === 'red' ? '#1f1218' : '#111a2e';
+                ctx.beginPath();
+                ctx.moveTo(-6, shoulderY + 6);
+                const tailSwing = (isRun ? -22 : -10) - state.coatFlow * 26 + Math.sin(t * 9) * 4;
+                ctx.lineTo(tailSwing, hipY + 24);
+                ctx.lineTo(8, hipY + 18);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // 3. Torso & Tactical Vest / Jacket
+            ctx.save();
+            ctx.translate(0, hipY);
+            ctx.rotate(torsoLean - state.recoil * 0.08);
+            ctx.fillStyle = char.faction === 'red' ? '#29151c' : '#16243d';
+            ctx.strokeStyle = char.accent;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(-9, -30, 18, 32, 5);
+            ctx.fill();
+            ctx.stroke();
+
+            // Glowing Tactical Chest Strip / Tie
+            ctx.fillStyle = char.accent;
+            ctx.fillRect(3, -24, 4, 16);
+
+            // 4. Head & Helmet / Sunglasses
+            ctx.translate(2, -37);
+            ctx.fillStyle = '#d6b49c';
+            ctx.beginPath();
+            ctx.arc(0, 0, 7.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (char.faction === 'blue') {
+                // Tactical Helmet & Neon Visor
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath();
+                ctx.arc(-1, -2, 8.5, Math.PI * 0.9, Math.PI * 2.1);
+                ctx.fill();
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(2, -3, 7, 3.5);
+            } else {
+                // Slick hair & glowing red sunglasses
+                ctx.fillStyle = '#09090b';
+                ctx.beginPath();
+                ctx.arc(-1, -3, 8, Math.PI, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(2, -2, 6, 2.5);
+            }
+            ctx.restore();
+
+            // 5. Front Leg
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 7.5;
+            ctx.beginPath();
+            ctx.moveTo(2, hipY);
+            if (isCrouch) {
+                ctx.lineTo(16, hipY + 12);
+                ctx.lineTo(14, 0);
+            } else if (isVault) {
+                ctx.lineTo(18, hipY + 6);
+                ctx.lineTo(6, hipY + 24);
+            } else {
+                const kneeX = cycle * 13;
+                const footX = cycle * 21;
+                ctx.lineTo(kneeX, hipY + 22);
+                ctx.lineTo(footX, 0);
+            }
+            ctx.stroke();
+
+            // 6. Articulated Arms & Weapon
+            ctx.save();
+            ctx.translate(3, shoulderY + 4);
+            const recoilKick = state.recoil * 7;
+            const aimRot = isDead ? 0.8 : (state.pose === 'crouchCover' ? 0.55 : (-0.04 - state.recoil * 0.14 + state.aimAngle));
+            ctx.rotate(aimRot);
+
+            // Arm segments
+            ctx.strokeStyle = char.faction === 'red' ? '#3b1d27' : '#1e3252';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(12 - recoilKick, 4);
+            ctx.lineTo(24 - recoilKick, 0);
+            ctx.stroke();
+
+            // Weapon Silhouette
+            if (!isDead) {
+                ctx.fillStyle = '#090d16';
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 1.2;
+                if (char.weapon === 'pistol') {
+                    ctx.fillRect(22 - recoilKick, -4, 14, 5);
+                    ctx.fillRect(22 - recoilKick, 0, 4, 6);
+                } else if (char.weapon === 'shotgun') {
+                    ctx.fillRect(10 - recoilKick, -4, 34, 6);
+                    ctx.fillStyle = '#78350f';
+                    ctx.fillRect(4 - recoilKick, -2, 10, 5);
+                } else if (char.weapon === 'sniper') {
+                    ctx.fillRect(8 - recoilKick, -4, 44, 5);
+                    ctx.fillRect(18 - recoilKick, -8, 14, 3); // Scope
+                    // Laser sight in Act I/II/III
+                    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(52 - recoilKick, -2);
+                    ctx.lineTo(420, 12);
+                    ctx.stroke();
+                } else {
+                    // SMG
+                    ctx.fillRect(14 - recoilKick, -4, 24, 6);
+                    ctx.fillRect(24 - recoilKick, 2, 4, 8);
+                }
+
+                // Dynamic Muzzle Flash Starburst
+                if (state.muzzleFlash) {
+                    const tipX = (char.weapon === 'sniper' ? 54 : (char.weapon === 'shotgun' ? 46 : 38)) - recoilKick;
+                    ctx.save();
+                    ctx.translate(tipX, -2);
+                    const flashGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, 42);
+                    flashGrad.addColorStop(0, '#ffffff');
+                    flashGrad.addColorStop(0.35, '#fde047');
+                    flashGrad.addColorStop(0.7, 'rgba(249, 115, 22, 0.6)');
+                    flashGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+                    ctx.fillStyle = flashGrad;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 42, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Spikes
+                    ctx.fillStyle = '#fef9c3';
+                    ctx.beginPath();
+                    ctx.ellipse(18, 0, 24, 4, 0, 0, Math.PI * 2);
+                    ctx.ellipse(4, 0, 8, 14, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+            ctx.restore();
+
+            ctx.restore();
+        }
+
+        function updateAndDrawParticles(dt, t, isSlowMo) {
+            const simDt = isSlowMo ? dt * 0.25 : dt;
+
+            // 1. Ambient Manhole Steam & Gunsmoke
+            if (Math.random() < 0.45) {
+                const vent = steamVents[Math.floor(Math.random() * steamVents.length)];
+                smokePuffs.push({
+                    x: vent.x + (Math.random() - 0.5) * 20,
+                    y: vent.y,
+                    vx: 12 + Math.random() * 18,
+                    vy: -18 - Math.random() * 15,
+                    r: 10,
+                    maxR: 55 + Math.random() * 30,
+                    alpha: 0.14,
+                    color: '148, 163, 184'
+                });
+            }
+
+            // Continuous Burning Car Fire & Embers in Act IV & V (t >= 41.2s)
+            if (blueSuvExploded) {
+                for (let i = 0; i < 3; i++) {
+                    fireParticles.push({
+                        x: 1380 + (Math.random() - 0.5) * 190,
+                        y: 735 + (Math.random() - 0.5) * 25,
+                        vx: (Math.random() - 0.5) * 45,
+                        vy: -90 - Math.random() * 130,
+                        r: 14 + Math.random() * 22,
+                        life: 1.0,
+                        decay: 1.1 + Math.random() * 0.9
+                    });
+                }
+            }
+
+            // Render Smoke Puffs
+            for (let i = smokePuffs.length - 1; i >= 0; i--) {
+                const p = smokePuffs[i];
+                p.x += p.vx * simDt;
+                p.y += p.vy * simDt;
+                p.r = lerp(p.r, p.maxR, simDt * 1.4);
+                p.alpha -= simDt * 0.16;
+                if (p.alpha <= 0.01) {
+                    smokePuffs.splice(i, 1);
+                    continue;
+                }
+                ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Render Fire Plumes
+            ctx.save();
+            ctx.globalCompositeOperation = 'screen';
+            for (let i = fireParticles.length - 1; i >= 0; i--) {
+                const f = fireParticles[i];
+                f.x += f.vx * simDt;
+                f.y += f.vy * simDt;
+                f.life -= f.decay * simDt;
+                if (f.life <= 0) {
+                    fireParticles.splice(i, 1);
+                    continue;
+                }
+                const g = ctx.createRadialGradient(f.x, f.y, 2, f.x, f.y, f.r);
+                g.addColorStop(0, `rgba(254, 249, 195, ${f.life})`);
+                g.addColorStop(0.4, `rgba(249, 115, 22, ${f.life * 0.85})`);
+                g.addColorStop(1, 'rgba(220, 38, 38, 0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+
+            // 2. Brass Shell Casings (with bouncing physics on wet asphalt)
+            for (let i = 0; i < shellCasings.length; i++) {
+                const c = shellCasings[i];
+                if (!c.settled) {
+                    c.x += c.vx * simDt;
+                    c.y += c.vy * simDt;
+                    c.vy += 680 * simDt; // Gravity
+                    c.rot += c.vRot * simDt;
+                    if (c.y >= c.groundY) {
+                        c.y = c.groundY;
+                        c.vy = -c.vy * 0.42;
+                        c.vx *= 0.65;
+                        c.vRot *= 0.5;
+                        if (Math.abs(c.vy) < 22) c.settled = true;
+                    }
+                }
+                ctx.save();
+                ctx.translate(c.x, c.y);
+                ctx.rotate(c.rot);
+                ctx.fillStyle = c.color;
+                ctx.fillRect(-3.5, -1.5, 7, 3);
+                ctx.restore();
+            }
+
+            // 3. Shattered Glass Shards
+            ctx.fillStyle = 'rgba(186, 230, 253, 0.75)';
+            for (const g of glassShards) {
+                if (g.y < g.groundY) {
+                    g.x += g.vx * simDt;
+                    g.y += g.vy * simDt;
+                    g.vy += 620 * simDt;
+                }
+                ctx.beginPath();
+                ctx.arc(g.x, g.y, g.size * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 4. Bullet Tracers & Bullet-Time Shockwave Rings
+            for (let i = activeTracers.length - 1; i >= 0; i--) {
+                const tr = activeTracers[i];
+                tr.progress += tr.speed * dt;
+                if (tr.progress >= 1.25) {
+                    activeTracers.splice(i, 1);
+                    continue;
+                }
+                const headP = clamp(tr.progress, 0, 1);
+                const tailP = clamp(tr.progress - (isSlowMo ? 0.38 : 0.25), 0, 1);
+                const hx = lerp(tr.x0, tr.x1, headP);
+                const hy = lerp(tr.y0, tr.y1, headP);
+                const tx = lerp(tr.x0, tr.x1, tailP);
+                const ty = lerp(tr.y0, tr.y1, tailP);
+
+                ctx.save();
+                ctx.strokeStyle = '#ffffff';
+                ctx.shadowColor = tr.color;
+                ctx.shadowBlur = 14;
+                ctx.lineWidth = isSlowMo ? 3.5 : 2.2;
+                ctx.beginPath();
+                ctx.moveTo(tx, ty);
+                ctx.lineTo(hx, hy);
+                ctx.stroke();
+
+                // Slow-mo visible brass bullet tip & Mach ripple rings
+                if (isSlowMo) {
+                    ctx.fillStyle = '#fde047';
+                    ctx.beginPath();
+                    ctx.arc(hx, hy, 4.5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+                    ctx.lineWidth = 1.2;
+                    ctx.beginPath();
+                    ctx.ellipse((hx + tx) * 0.5, (hy + ty) * 0.5, 6, 16, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            // Shockwaves
+            for (let i = shockwaves.length - 1; i >= 0; i--) {
+                const sw = shockwaves[i];
+                sw.r = lerp(sw.r, sw.maxR, dt * 4.2);
+                sw.alpha -= dt * 1.15;
+                if (sw.alpha <= 0.01) {
+                    shockwaves.splice(i, 1);
+                    continue;
+                }
+                ctx.strokeStyle = `rgba(255, 255, 255, ${sw.alpha})`;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // 5. Metal Impact Sparks & Blood Droplets
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                const sp = sparks[i];
+                sp.x += sp.vx * simDt;
+                sp.y += sp.vy * simDt;
+                sp.vy += 580 * simDt;
+                sp.life -= sp.decay * simDt;
+                if (sp.life <= 0) {
+                    sparks.splice(i, 1);
+                    continue;
+                }
+                ctx.fillStyle = sp.color;
+                ctx.beginPath();
+                ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 6. Heavy Rain Particles & Ground Splashes
+            ctx.strokeStyle = 'rgba(186, 230, 253, 0.38)';
+            for (const r of rainDrops) {
+                r.x -= r.speed * 0.14 * simDt;
+                r.y += r.speed * simDt;
+                if (r.y > 760 + Math.random() * 290) {
+                    if (splashes.length < 90 && Math.random() < 0.45) {
+                        splashes.push({ x: r.x, y: r.y, r: 1, maxR: 8 + Math.random() * 8, alpha: 0.45 });
+                    }
+                    r.y = -30;
+                    r.x = Math.random() * (W + 400) - 100;
+                }
+                ctx.lineWidth = r.thickness;
+                ctx.beginPath();
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x - 5, r.y + r.len);
+                ctx.stroke();
+            }
+
+            // Puddle Splashes
+            for (let i = splashes.length - 1; i >= 0; i--) {
+                const s = splashes[i];
+                s.r += 28 * simDt;
+                s.alpha -= 1.3 * simDt;
+                if (s.alpha <= 0.01) {
+                    splashes.splice(i, 1);
+                    continue;
+                }
+                ctx.strokeStyle = `rgba(203, 213, 225, ${s.alpha})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(s.x, s.y, s.r, s.r * 0.3, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        let currentTime = 0;
+        let isPlaying = false;
+        let lastFramePerf = performance.now();
+        let fpsSmooth = 60;
+
+        function renderScene(t, dt) {
+            const isSlowMo = (t >= 32.0 && t <= 36.0);
+
+            // Process scripted events between lastProcessedTime and t
+            if (t >= lastProcessedTime && t - lastProcessedTime < 1.2) {
+                for (const shot of SCRIPTED_SHOTS) {
+                    if (shot.t > lastProcessedTime && shot.t <= t) {
+                        triggerShotVisuals(shot, isSlowMo);
+                    }
+                }
+                // Tire screech when reinforcement van arrives at 25.8s
+                if (lastProcessedTime < 25.8 && t >= 25.8) {
+                    sound.playTireScreech();
+                }
+                // Grenade / Fuel Tank Explosion at 41.2s
+                if (lastProcessedTime < 41.2 && t >= 41.2) {
+                    triggerBigExplosion(1380, 725);
+                }
+            } else if (Math.abs(t - lastProcessedTime) >= 1.2) {
+                // User scrubbed the timeline bar
+                resetDynamicEffects(t);
+            }
+            lastProcessedTime = t;
+
+            // Camera state & screen shake decay
+            const cam = getCameraState(t);
+            screenShake = Math.max(0, screenShake - dt * 28);
+            const shakeX = (Math.random() - 0.5) * screenShake * 2;
+            const shakeY = (Math.random() - 0.5) * screenShake * 2;
+
+            ctx.save();
+            // Apply Camera Transform
+            ctx.translate(W / 2 + shakeX, H / 2 + shakeY);
+            ctx.scale(cam.zoom, cam.zoom);
+            ctx.translate(-cam.focusX, -cam.focusY);
+
+            // 1. Draw Background Alley & Reflections
+            drawEnvironment(t);
+
+            // 2. Draw Arriving / Parked Vehicles
+            // Left Red Syndicate Sedan (Drives in 0s - 3.2s)
+            const redCarX = lerp(-220, 480, easeOutCubic(t / 3.2));
+            drawVehicle(redCarX, 745, 1, 'sedan', redSedanGlassBroken, false, t);
+
+            // Right Blue Tactical SUV (Drives in 0.4s - 3.6s, explodes at 41.2s)
+            const blueCarX = lerp(W + 220, 1380, easeOutCubic((t - 0.4) / 3.2));
+            drawVehicle(blueCarX, 745, -1, 'blueSuv', t > 14.0, blueSuvExploded, t);
+
+            // Act III Reinforcement Van (Screeches in 25.2s - 26.8s)
+            if (t >= 25.2) {
+                const vanX = lerp(-260, 175, easeOutCubic((t - 25.2) / 1.6));
+                drawVehicle(vanX, 765, 1, 'van', false, false, t);
+            }
+
+            // 3. Draw Flying Grenade Arc (40.2s - 41.2s)
+            if (t >= 40.2 && t < 41.2) {
+                const gp = (t - 40.2) / 1.0;
+                const gx = lerp(380, 1380, gp);
+                const gy = lerp(710, 725, gp) - Math.sin(gp * Math.PI) * 240;
+                ctx.fillStyle = '#ef4444';
+                ctx.shadowColor = '#ef4444';
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.arc(gx, gy, 5.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            // 4. Draw All Articulated Characters
+            for (const char of CHARACTERS) {
+                const cState = getCharacterState(char, t);
+                drawArticulatedCharacter(char, cState, t);
+            }
+
+            // 5. Update & Render Particles (Rain, Casings, Tracers, Fire, Smoke)
+            updateAndDrawParticles(dt, t, isSlowMo);
+
+            ctx.restore();
+
+            // 6. Screen-Space Post-Processing (Bullet-Time Desaturation/Vignette, Cinema Letterbox, Fade-in/out)
+            if (isSlowMo) {
+                const btGrad = ctx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, W * 0.65);
+                btGrad.addColorStop(0, 'rgba(6, 182, 212, 0)');
+                btGrad.addColorStop(1, 'rgba(8, 47, 73, 0.42)');
+                ctx.fillStyle = btGrad;
+                ctx.fillRect(0, 0, W, H);
+            }
+
+            // Explosion White-Hot Flash at 41.2s
+            if (t >= 41.2 && t < 41.85) {
+                const flashAlpha = (1 - (t - 41.2) / 0.65) * 0.78;
+                ctx.fillStyle = `rgba(254, 243, 199, ${flashAlpha})`;
+                ctx.fillRect(0, 0, W, H);
+            }
+
+            // Cinematic 2.39:1 Anamorphic Letterbox Bars
+            const barHeight = 86;
+            ctx.fillStyle = '#020305';
+            ctx.fillRect(0, 0, W, barHeight);
+            ctx.fillRect(0, H - barHeight, W, barHeight);
+
+            // Subtle Subtitle / Narrative Captions on Lower Letterbox Bar
+            drawCinematicSubtitle(t);
+
+            // Intro & Outro Fade to Black
+            if (t < 1.2) {
+                ctx.fillStyle = `rgba(0, 0, 0, ${1 - t / 1.2})`;
+                ctx.fillRect(0, 0, W, H);
+            } else if (t > 57.5) {
+                ctx.fillStyle = `rgba(0, 0, 0, ${(t - 57.5) / 2.5})`;
+                ctx.fillRect(0, 0, W, H);
+            }
+
+            // Update UI Telemetry
+            updateHUD(t, cam.label, isSlowMo);
+        }
+
+        function drawCinematicSubtitle(t) {
+            let sub = '';
+            if (t >= 1.0 && t < 5.5) sub = '午夜 02:15 · 九龙暗巷 — 两大帮派车辆驶入雨夜街头';
+            else if (t >= 6.0 && t < 11.5) sub = '“把货交出来，今晚没人需要流血。” —— 双方拔枪进入生死对峙';
+            else if (t >= 12.0 && t < 18.0) sub = '砰！冷枪击碎车窗，街头火并瞬间爆发，弹壳如雨点般坠落积水';
+            else if (t >= 25.2 && t < 31.5) sub = '刺耳刹车声划破夜空，支援厢型车杀到，散弹枪与冲锋枪交叉火力压制';
+            else if (t >= 32.0 && t <= 36.2) sub = '【子弹时间 BULLET-TIME】赤帮首领翻越引擎盖，在慢镜头弹道间凌空反击';
+            else if (t >= 40.2 && t < 46.5) sub = '高爆手雷引爆改装越野车油箱，烈焰冲天，火光映红整条雨巷';
+            else if (t >= 52.0 && t <= 59.5) sub = '远处红蓝警笛逼近，硝烟散尽，幸存首领捂住伤口隐入暗巷深处……';
+
+            if (sub) {
+                ctx.save();
+                ctx.font = '700 22px "Noto Sans SC", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#e2e8f0';
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 6;
+                ctx.fillText(sub, W / 2, H - 34);
+                ctx.restore();
+            }
+        }
+
+        const timelineSlider = document.getElementById('timelineSlider');
+        const timecodeCur = document.getElementById('timecodeCur');
+        const actSub = document.getElementById('actSub');
+        const actTitle = document.getElementById('actTitle');
+        const actBanner = document.getElementById('actBanner');
+        const bulletTimeBadge = document.getElementById('bulletTimeBadge');
+        const camTelemetry = document.getElementById('camTelemetry');
+        const casingCount = document.getElementById('casingCount');
+        const fpsCounter = document.getElementById('fpsCounter');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const playPauseText = document.getElementById('playPauseText');
+        const restartBtn = document.getElementById('restartBtn');
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+        const startOverlay = document.getElementById('startOverlay');
+        const startWithAudioBtn = document.getElementById('startWithAudioBtn');
+        const startMutedBtn = document.getElementById('startMutedBtn');
+
+        function formatTimecode(sec) {
+            const m = Math.floor(sec / 60);
+            const s = (sec % 60).toFixed(2).padStart(5, '0');
+            return `0${m}:${s}`;
+        }
+
+        function updateHUD(t, camLabel, isSlowMo) {
+            timelineSlider.value = t;
+            timecodeCur.textContent = formatTimecode(t);
+            camTelemetry.textContent = camLabel;
+            casingCount.textContent = shellCasings.length;
+            fpsCounter.textContent = Math.round(fpsSmooth);
+            bulletTimeBadge.style.display = isSlowMo ? 'inline-block' : 'none';
+
+            // Current Act Banner
+            for (const act of ACTS) {
+                if (t >= act.start && t <= act.end) {
+                    if (actTitle.textContent !== act.title) {
+                        actSub.textContent = act.code;
+                        actTitle.textContent = act.title;
+                        actBanner.style.borderLeftColor = act.color;
+                    }
+                    break;
+                }
+            }
+        }
+
+        function updatePlayButtonUI() {
+            if (isPlaying) {
+                playPauseIcon.textContent = '⏸';
+                playPauseText.textContent = '暂停';
+            } else {
+                playPauseIcon.textContent = '▶';
+                playPauseText.textContent = '播放';
+            }
+        }
+
+        function updateAudioButtonUI() {
+            if (sound.enabled) {
+                audioIcon.textContent = '🔊';
+                audioText.textContent = '音效: 开';
+                audioToggleBtn.classList.replace('text-slate-400', 'text-amber-400');
+            } else {
+                audioIcon.textContent = '🔇';
+                audioText.textContent = '音效: 关';
+                audioToggleBtn.classList.replace('text-amber-400', 'text-slate-400');
+            }
+        }
+
+        startWithAudioBtn.addEventListener('click', () => {
+            sound.setEnabled(true);
+            updateAudioButtonUI();
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            currentTime = 0;
+            resetDynamicEffects(0);
+            isPlaying = true;
+            updatePlayButtonUI();
+        });
+
+        startMutedBtn.addEventListener('click', () => {
+            sound.setEnabled(false);
+            updateAudioButtonUI();
+            startOverlay.style.opacity = '0';
+            setTimeout(() => startOverlay.style.display = 'none', 500);
+            currentTime = 0;
+            resetDynamicEffects(0);
+            isPlaying = true;
+            updatePlayButtonUI();
+        });
+
+        playPauseBtn.addEventListener('click', () => {
+            if (currentTime >= 60) {
+                currentTime = 0;
+                resetDynamicEffects(0);
+            }
+            isPlaying = !isPlaying;
+            updatePlayButtonUI();
+        });
+
+        restartBtn.addEventListener('click', () => {
+            currentTime = 0;
+            lastProcessedTime = 0;
+            resetDynamicEffects(0);
+            isPlaying = true;
+            updatePlayButtonUI();
+        });
+
+        audioToggleBtn.addEventListener('click', () => {
+            sound.setEnabled(!sound.enabled);
+            updateAudioButtonUI();
+        });
+
+        timelineSlider.addEventListener('input', (e) => {
+            currentTime = parseFloat(e.target.value);
+            resetDynamicEffects(currentTime);
+            lastProcessedTime = currentTime;
+            renderScene(currentTime, 0.016);
+        });
+
+        document.querySelectorAll('.act-jump-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = parseFloat(btn.getAttribute('data-jump'));
+                currentTime = target;
+                resetDynamicEffects(currentTime);
+                lastProcessedTime = currentTime;
+                if (startOverlay.style.display !== 'none') {
+                    startOverlay.style.opacity = '0';
+                    setTimeout(() => startOverlay.style.display = 'none', 500);
+                }
+                isPlaying = true;
+                updatePlayButtonUI();
+            });
+        });
+
+        function masterLoop(now) {
+            const rawDt = clamp((now - lastFramePerf) / 1000, 0.001, 0.08);
+            lastFramePerf = now;
+            fpsSmooth = lerp(fpsSmooth, 1 / rawDt, 0.1);
+
+            if (isPlaying) {
+                currentTime += rawDt;
+                if (currentTime >= 60.0) {
+                    currentTime = 60.0;
+                    isPlaying = false;
+                    updatePlayButtonUI();
+                }
+            }
+
+            sound.updateAmbience(currentTime, isPlaying);
+            renderScene(currentTime, rawDt);
+            requestAnimationFrame(masterLoop);
+        }
+
+        window.onload = function () {
+            resetDynamicEffects(0);
+            requestAnimationFrame(masterLoop);
+        };
+    </script>
 </body>
 </html>
